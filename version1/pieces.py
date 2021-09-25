@@ -1,17 +1,14 @@
 # -*- coding: utf-8 -*-
+import abc
 
-class Piece:
+
+class Piece(abc.ABC):
     
     # General values for all pieces:
     # - getImage()
     # - movement
-    
-    def __init__(x , y):
-        self.x = x
-        self.y = y
-        
     # abstract Movement
-    @abstractmethod
+    @abc.ABC.abstractmethod
     def isValid(xFrom, yFrom, xTo, yTo):
         
         
@@ -21,7 +18,7 @@ class Sheep(Piece):
     # - superposition
     # - image depending on superposition / entanglement
     # - specific movement
-    
+    pass
     
 class Wolf(Piece):
     # - specific Image
