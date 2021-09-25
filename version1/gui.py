@@ -7,11 +7,7 @@ from pyglet import image
 import pieces
 
 field_radius = 30
-<<<<<<< HEAD
-field_color = (255, 0, 0)
-=======
 field_color = (255, 255, 255)
->>>>>>> 0d97ec26fa9204f674a789f4a1b7702137a65ca9
 grid_margin = 100
 window_width = 800
 center_margin = window_width/2 - 3*grid_margin
@@ -38,6 +34,10 @@ def on_draw():
     gb = current_game.gameboard
     batch = pg.graphics.Batch()
     
+    #background
+    pic = image.load("icons/background.png")
+    pic.blit(0,0)
+    
     #draw circles
     for row in range(7):
         for column in range(7):
@@ -61,27 +61,6 @@ def on_draw():
                 
     for row in range(7):
         for column in range(7):
-<<<<<<< HEAD
-            pos = ind_to_cord(row,column)
-            #draw horizontal lines
-            if not (game.isOutside(row+1,column) or game.isOutside(row, column)):
-                line = pg.shapes.Line(pos[0]+field_radius,
-                                      pos[1],
-                                      pos[0]+grid_margin-field_radius,
-                                      pos[1],
-                                      width=5,
-                                      batch=batch)
-            batch.draw()
-            #draw vertical lines
-            if not (game.isOutside(row,column-1) or game.isOutside(row, column)):
-                line = pg.shapes.Line(pos[0],
-                                      pos[1]+field_radius,
-                                      pos[0],
-                                      pos[1]+grid_margin-field_radius,
-                                      width=5,
-                                      batch=batch)
-            batch.draw()
-=======
             for offset_row in range(-1, 2):
                 for offset_column in range(-1, 2):
                     row2 = row + offset_row
@@ -119,7 +98,6 @@ def on_draw():
 #                 batch.draw()
 #             batch.draw()
 # =============================================================================
->>>>>>> 0d97ec26fa9204f674a789f4a1b7702137a65ca9
     
     #drawing diagonal lines
     for (i,j) in ((1,3), (3,1), (3,3), (5,3), (3,5)):

@@ -32,7 +32,7 @@ class Sheep(Piece):
     
 class Wolf(Piece):
     def getImage(self):
-        return "icons/wolf.png"
+        return "icons/wolf.jpg"
             
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check step length
