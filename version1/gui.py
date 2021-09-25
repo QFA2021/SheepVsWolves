@@ -4,6 +4,7 @@ import game
 from pyglet.window import mouse
 import numpy as np
 from pyglet import image
+import pieces
 
 field_radius = 30
 field_color = (255, 255, 255)
@@ -44,12 +45,17 @@ def on_draw():
             batch.draw()
     batch.draw()
     
-    pic = image.load('icons/sheep.png')
-    pic.width = 30
-    pic.height = 30
-    pic.anchor_x = pic.width // 2
-    pic.anchor_y = pic.height // 2
-    pic.blit(x, y)
+    #ask for sheep
+    for row in range(7):
+        for column in range(7):
+            pos = ind_to_cord(row, column)
+            entry = gb[row][column]
+            if entry!=None:
+                pic = image.load(entry.getImage())
+                pic.anchor_x = pic.width // 2
+                pic.anchor_y = pic.height // 2
+                pic.blit(pos[0], pos[1])                
+                
     
     for row in range(7):
         for column in range(7):
@@ -147,4 +153,3 @@ def ind_to_cord(i,j):
 
 if __name__ == '__main__': 
      pg.app.run()
-
