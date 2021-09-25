@@ -15,7 +15,7 @@ class Piece:
     def isValid(xFrom, yFrom, xTo, yTo):
         
         
-class Sheep(Piece): 
+class Sheep(Piece):
     # Create methods and variables for
     # - entangled
     # - superposition
