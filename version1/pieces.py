@@ -20,7 +20,7 @@ class Sheep(Piece):
         #check sheep going down
         down = (yTo >= yFrom)
         #check step length
-        dist_square = (xTo-xFrom)^2 + (yTo-yFrom)^2
+        dist_square = (xTo-xFrom)**2 + (yTo-yFrom)**2
         if down and (dist_square==1 or dist_square==2):
             return True
         return False
@@ -41,7 +41,7 @@ class Wolf(Piece):
         if free==False:
             return False
         #check step length
-        dist_square = (xTo-xFrom)^2 + (yTo-yFrom)^2
-        if down and (dist_square==1 or dist_square==2 or dist_square==4 dist_square==8):
+        dist_square = (xTo-xFrom)**2 + (yTo-yFrom)**2
+        if (dist_square==1 or dist_square==2 or dist_square==4 or dist_square==8):
             return True
         return False
