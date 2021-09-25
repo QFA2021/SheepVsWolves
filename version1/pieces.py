@@ -1,14 +1,11 @@
-# -*- coding: utf-8 -*-
 import abc
 import os
-import game.py
+import game
 
 class Piece(abc.ABC):
-    @abc.abstracmethod
     def getImage():
         pass
     
-    @abc.abstractmethod
     def isValid(xFrom, yFrom, xTo, yTo):
         pass
         
@@ -33,6 +30,7 @@ class Sheep(Piece):
     # - superposition
     # - image depending on superposition / entanglement
     # - specific movement
+
     
 class Wolf(Piece):
     def getImage():

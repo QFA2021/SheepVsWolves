@@ -22,7 +22,7 @@ class Game:
         # add sheep
         for y in range(4):
             for x in range(7):
-                if not self.isOutside(x ,y):
+                if not isOutside(x ,y):
                     self.gameboard[x][y] = Sheep()
                 
                
@@ -46,7 +46,7 @@ class Game:
             return self.gameboard[x][y] == None
         return False
         
-    def isOutside(x, y) -> bool:
+def isOutside(x, y) -> bool:
         if y < 2:
             if x < 2 or x > 4:
                 return True
@@ -54,5 +54,5 @@ class Game:
             if x < 2 or x > 4:
                 return True
             
-        return False
+        return False   
         
