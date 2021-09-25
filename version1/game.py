@@ -57,6 +57,8 @@ class Game:
             return not self.isEmpty(x, y)
         
         selected_piece = self.get_selected_piece()
+        if not self.isEmpty(self.selected_x, self.selected_y):
+            return False
         
         return selected_piece.isValid(self.selected_x, self.selected_y, x, y)
         
