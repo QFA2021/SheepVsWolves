@@ -2,14 +2,14 @@ import abc
 import os
 
 class Piece(abc.ABC):
-    def getImage():
+    def getImage(self):
         pass
     
     def isValid(xFrom, yFrom, xTo, yTo):
         pass
         
 class Sheep(Piece):
-    def getImage():
+    def getImage(self):
         return "icons/sheep.png"
     
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
@@ -31,7 +31,7 @@ class Sheep(Piece):
 
     
 class Wolf(Piece):
-    def getImage():
+    def getImage(self):
         return "icons/wolf.png"
             
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
