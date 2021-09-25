@@ -95,20 +95,20 @@ class Game:
     
 
     def move_sheep(self, sheep: Sheep, x: int, y: int):
-        move_piece_simple(sheep, x, y)
+        self.move_piece_simple(sheep, x, y)
         
         if is_in_stable(x, y):
             self.sheep_safe += 1
 
 
     def move_wolf(self, wolf: Wolf, x: int, y: int):
-        move_piece_simple(wolf, x, y)
+        self.move_piece_simple(wolf, x, y)
 
         capture = False
         if abs(x - self.selected_x) == 2 or abs(y - self.selected_y) == 2:
             capture = True
         
-        if caputure:
+        if capture:
             # A capture move was made, so a sheep has been captured
             in_between_x = (x + self.selected_x) / 2
             in_between_y = (y + self.selected_y) / 2
