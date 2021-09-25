@@ -1,6 +1,5 @@
 import abc
 import os
-import game
 
 class Piece(abc.ABC):
     def getImage():
@@ -14,9 +13,6 @@ class Sheep(Piece):
         return os.path.join("/icons/sheep.png")
     
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
-        free = game.isFree(xTo, yTo)
-        if free==False:
-            return False
         #check sheep going down
         down = (yTo <= yFrom)
         #check step length
@@ -39,9 +35,6 @@ class Wolf(Piece):
         return os.path.join("/icons/wolf.png")
             
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
-        free = game.isFree(xTo, yTo)
-        if free==False:
-            return False
         #check step length
         dist_square = (xTo-xFrom)**2 + (yTo-yFrom)**2
         if (dist_square==1 or dist_square==2 or dist_square==4 or dist_square==8):
