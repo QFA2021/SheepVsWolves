@@ -32,13 +32,13 @@ def on_draw():
     window.clear()
     
     gb = current_game.gameboard
-    batch = pg.graphics.Batch()
     
     #background
     pic = image.load("icons/background.png")
     pic.blit(0,0)
     
     # draw grid
+    batch = pg.graphics.Batch()
     for row in range(7):
         for column in range(7):
             for offset_row in range(-1, 2):
@@ -59,16 +59,19 @@ def on_draw():
 
     
     # draw circles
+    batch = pg.graphics.Batch()
     for row in range(7):
         for column in range(7):
             if game.isOutside(column, row): continue
             x = column * grid_margin
             y = row * grid_margin
-            circle = pg.shapes.Circle(x+center_margin, y+center_margin, field_radius, color=field_color, batch=batch)
+            circle = pg.shapes.Circle(x+center_margin, y+center_margin, 
+                                      field_radius, color=field_color, batch=batch)
             batch.draw()
     batch.draw()
     
     #draw sheep
+    batch = pg.graphics.Batch()
     for row in range(7):
         for column in range(7):
             pos = ind_to_cord(row, column)
@@ -80,23 +83,6 @@ def on_draw():
                 pic.blit(pos[0], pos[1])                
 
 
-    for row in range(7):
-        for column in range(7):
-            for offset_row in range(-1, 2):
-                for offset_column in range(-1, 2):
-                    row2 = row + offset_row
-                    column2 = column + offset_column
-                    
-                    if game.is_connected(column, row, column2, row2):
-                        pos1 = ind_to_cord(row, column)
-                        pos2 = ind_to_cord(row2, column2)
-                        
-                        line = pg.shapes.Line(pos1[0], pos1[1],
-                                              pos2[0], pos2[1],
-                                              width=5,
-                                              batch=batch)
-                        
-                        batch.draw()
 
     
 @window.event
