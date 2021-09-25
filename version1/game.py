@@ -121,7 +121,7 @@ class Game:
                 self.sheep_in_stable -= 1
             
             
-    def move_piece_simple(self, piece: pieces:Piece, x: int, y: int): 
+    def move_piece_simple(self, piece: pieces.Piece, x: int, y: int): 
         self.gameboard[self.selected_x][self.selected_y()] = None
         self.gameboard[x][y] = piece
     
