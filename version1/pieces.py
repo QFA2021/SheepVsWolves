@@ -10,7 +10,7 @@ class Piece(abc.ABC):
         
 class Sheep(Piece):
     def getImage(self):
-        return "icons/sheep.png"
+        return "icons/cute_sheep_transparent.png"
     
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check sheep going down
@@ -32,7 +32,7 @@ class Sheep(Piece):
     
 class Wolf(Piece):
     def getImage(self):
-        return "icons/wolf.jpg"
+        return "icons/wolf_transparent.png"
             
     def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check step length

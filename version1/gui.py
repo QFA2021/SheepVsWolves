@@ -5,6 +5,7 @@ from pyglet.window import mouse
 import numpy as np
 from pyglet import image
 import pieces
+from pyglet.gl import *
 
 field_radius = 30
 field_color = (255, 0, 24)
@@ -31,6 +32,9 @@ window.set_visible()
 def on_draw():
     window.clear()
     
+    glEnable(GL_BLEND)
+    glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
+    
     gb = current_game.gameboard
     
     #background
@@ -53,6 +57,7 @@ def on_draw():
                         line = pg.shapes.Line(pos1[0], pos1[1],
                                               pos2[0], pos2[1],
                                               width=5,
+                                              color = field_color,
                                               batch=batch)
                         
                         batch.draw()
