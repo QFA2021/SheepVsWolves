@@ -21,8 +21,10 @@ class Sheep(Piece):
     # - superposition
     # - image depending on superposition / entanglement
     # - specific movement
+    pass
     
     
 class Wolf(Piece):
     # - specific Image
     # - specific movement
+    pass
