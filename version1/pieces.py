@@ -1,17 +1,15 @@
 import abc
 import os
-import game.py
+import game
 
 class Piece(abc.ABC):
     # General values for all pieces:
     # getImage() - check mate
     # abstract Movement
 
-    @abc.abstracmethod
     def getImage():
         pass
     
-    @abc.abstractmethod
     def isValid(xFrom, yFrom, xTo, yTo):
         pass
         
