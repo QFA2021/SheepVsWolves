@@ -104,9 +104,11 @@ class Game:
     def move_wolf(self, wolf: Wolf, x: int, y: int):
         move_piece_simple(wolf, x, y)
 
-        # TODO: temporary, check this later with method provided by gui
-        normal_move = True  
-        if not normal_move:
+        capture = False
+        if abs(x - self.selected_x) == 2 or abs(y - self.selected_y) == 2:
+            capture = True
+        
+        if caputure:
             # A capture move was made, so a sheep has been captured
             in_between_x = (x + self.selected_x) / 2
             in_between_y = (y + self.selected_y) / 2
