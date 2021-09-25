@@ -6,7 +6,7 @@ Created on Thu Sep 23 09:16:36 2021
 """
 from pieces import Sheep, Wolf
 import enum
-import pieces.py
+import pieces
 
 # The state indicates which action is next to be performed
 class TurnState(enum.Enum):
