@@ -47,12 +47,12 @@ class Game:
         return False
         
 def isOutside(x, y) -> bool:
-        if y < 2:
-            if x < 2 or x > 4:
+        if 0 <= y <= 1 or 5 <= y <= 6:
+            if 0 <= x <= 1 or 5 <= x <= 6:
                 return True
-        elif y > 4:
-            if x < 2 or x > 4:
+        elif 2 <= y <= 4:
+            if 0 <= x <= 6:
                 return True
-            
+
         return False   
         
