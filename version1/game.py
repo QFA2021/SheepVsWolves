@@ -149,4 +149,22 @@ def isOutside(x, y) -> bool:
         if x<2 or x>4:
             return True
     return False   
-        
+
+# whether two points are connected on the gameboard via the grid
+def is_connected(x1: int, y1: int, x2: int, y2: int) -> bool:
+    if (x1 - x2)**2 + (y1 - y2)**2 >= 2:
+        return False
+    
+    if isOutside(x1, y1) or isOutside(x2, y2):
+        return False
+    
+    return is_connected_straight(x1, y1, x2, y2) or is_connected_diagonally(x1, y1, x2, y2)
+    
+    
+def is_connected_straight(x1: int, y1: int, x2: int, y2: int) -> bool:
+    return (abs(x1 - x2) == 1) != (abs(y1 - y2) == 1)
+
+    
+
+def is_connected_diagonally(x1: int, y1: int, x2: int, y2: int) -> bool:
+    return (x1 - y1) % 2 == 0 and (x2 - y2) % 2 == 0

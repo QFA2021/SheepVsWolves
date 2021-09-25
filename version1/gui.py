@@ -6,7 +6,7 @@ import numpy as np
 from pyglet import image
 
 field_radius = 30
-field_color = (250, 0, 0)
+field_color = (255, 255, 255)
 grid_margin = 100
 window_width = 800
 center_margin = window_width/2 - 3*grid_margin
@@ -53,26 +53,43 @@ def on_draw():
     
     for row in range(7):
         for column in range(7):
-            #draw horizontal lines
-            pos = ind_to_cord(row,column)
-            if not (game.isOutside(row+1,column) or game.isOutside(row, column)):
-                line = pg.shapes.Line(pos[0]+field_radius,
-                                      pos[1],
-                                      pos[0]+grid_margin-field_radius,
-                                      pos[1],
-                                      width=5,
-                                      batch=batch)
-                batch.draw()
-            #draw vertical lines
-            if not (game.isOutside(row,column-1) or game.isOutside(row, column)):
-                line = pg.shapes.Line(pos[0],
-                                      pos[1]+field_radius,
-                                      pos[0],
-                                      pos[1]+grid_margin-field_radius,
-                                      width=5,
-                                      batch=batch)
-                batch.draw()
-            batch.draw()
+            for offset_row in range(-1, 2):
+                for offset_column in range(-1, 2):
+                    row2 = row + offset_row
+                    column2 = column + offset_column
+                    
+                    if game.is_connected(column, row, column2, row2):
+                        pos1 = ind_to_cord(row, column)
+                        pos2 = ind_to_cord(row2, column2)
+                        
+                        line = pg.shapes.Line(pos1[0], pos1[1],
+                                              pos2[0], pos2[1],
+                                              width=5,
+                                              batch=batch)
+                        
+                        batch.draw()
+# =============================================================================
+#             #draw horizontal lines
+#             pos = ind_to_cord(row,column)
+#             if not (game.isOutside(row+1,column) or game.isOutside(row, column)):
+#                 line = pg.shapes.Line(pos[0]+field_radius,
+#                                       pos[1],
+#                                       pos[0]+grid_margin-field_radius,
+#                                       pos[1],
+#                                       width=5,
+#                                       batch=batch)
+#                 batch.draw()
+#             #draw vertical lines
+#             if not (game.isOutside(row,column-1) or game.isOutside(row, column)):
+#                 line = pg.shapes.Line(pos[0],
+#                                       pos[1]+field_radius,
+#                                       pos[0],
+#                                       pos[1]+grid_margin-field_radius,
+#                                       width=5,
+#                                       batch=batch)
+#                 batch.draw()
+#             batch.draw()
+# =============================================================================
     
     #TODO abstand schraege striche variable
     for (i,j) in ((1,3), (3,1), (3,3), (5,3), (3,5)):
