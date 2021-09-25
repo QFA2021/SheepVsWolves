@@ -8,6 +8,7 @@ import pieces
 
 field_radius = 30
 field_color = (255, 0, 24)
+
 grid_margin = 100
 window_width = 800
 center_margin = window_width/2 - 3*grid_margin
@@ -23,7 +24,6 @@ window.set_visible()
 # TODOS:
 # programmeticly draw the gameboard 
 # for the concrete placement of the pieces get the images from the subclasses
-
 # on click pass it on the the gameBoard
 
 
@@ -65,7 +65,7 @@ def on_draw():
             batch.draw()
     batch.draw()
     
-    #ask for sheep
+    #draw sheep
     for row in range(7):
         for column in range(7):
             pos = ind_to_cord(row, column)
@@ -75,8 +75,25 @@ def on_draw():
                 pic.anchor_x = pic.width // 2
                 pic.anchor_y = pic.height // 2
                 pic.blit(pos[0], pos[1])                
-                
 
+
+    for row in range(7):
+        for column in range(7):
+            for offset_row in range(-1, 2):
+                for offset_column in range(-1, 2):
+                    row2 = row + offset_row
+                    column2 = column + offset_column
+                    
+                    if game.is_connected(column, row, column2, row2):
+                        pos1 = ind_to_cord(row, column)
+                        pos2 = ind_to_cord(row2, column2)
+                        
+                        line = pg.shapes.Line(pos1[0], pos1[1],
+                                              pos2[0], pos2[1],
+                                              width=5,
+                                              batch=batch)
+                        
+                        batch.draw()
 
     
 @window.event

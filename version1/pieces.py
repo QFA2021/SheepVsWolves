@@ -2,7 +2,7 @@ import abc
 import os
 
 class Piece(abc.ABC):
-    def getImage():
+    def getImage(self):
         pass
     
     def isValid(xFrom, yFrom, xTo, yTo):

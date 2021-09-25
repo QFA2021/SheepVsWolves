@@ -43,12 +43,12 @@ class Game:
         # add sheep
         for y in range(4):
             for x in range(7):
-                if not isOutside(x ,y):
+                if not isOutside(x,y):
                     self.gameboard[x][y] = Sheep()
                 
                
         # add wolfs
-        self.gameboard[4][2] = Wolf()
+        self.gameboard[2][4] = Wolf()
         self.gameboard[4][4] = Wolf()
         
         
