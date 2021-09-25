@@ -18,13 +18,15 @@ class Sheep(Piece):
         if free==False:
             return False
         #check sheep going down
-        down = (yTo >= yFrom)
+        down = (yTo <= yFrom)
         #check step length
         dist_square = (xTo-xFrom)**2 + (yTo-yFrom)**2
         if down and (dist_square==1 or dist_square==2):
             return True
         return False
     
+    ENTANGLED = False
+    SUPERPOSITION = False
     # Create methods and variables for
     # - entangled
     # - superposition
