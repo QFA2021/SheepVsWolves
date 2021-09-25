@@ -98,7 +98,7 @@ class Game:
         self.move_piece_simple(sheep, x, y)
         
         if is_in_stable(x, y):
-            self.sheep_safe += 1
+            self.sheep_in_stable += 1
 
 
     def move_wolf(self, wolf: Wolf, x: int, y: int):
