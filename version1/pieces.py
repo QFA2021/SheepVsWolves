@@ -45,3 +45,4 @@ class Wolf(Piece):
     
     # - specific Image
     # - specific movement
+    pass
