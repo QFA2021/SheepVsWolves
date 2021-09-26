@@ -43,7 +43,7 @@ class Game:
         # add sheep
         for y in range(4):
             for x in range(7):
-                if not isOutside(x,y):
+                if not is_outside(x,y):
                     self.gameboard[x][y] = Sheep()
                 
                
@@ -131,7 +131,7 @@ class Game:
 
     
     
-    def isEmpty(self, x, y) -> bool:
+    def is_empty(self, x, y) -> bool:
         if not self.isOutside(x, y):
             return self.gameboard[x][y] == None
         return False
@@ -142,7 +142,7 @@ def is_in_stable(x: int, y: int) -> bool:
     if x < 2 or x > 4: return False
     return True
     
-def isOutside(x, y) -> bool:
+def is_outside(x: int, y: int) -> bool:
     if (x<0 or x>6): return True
     if (y<0 or y>6): return True    
     if y<2 or y>4:
@@ -158,7 +158,7 @@ def is_connected(x1: int, y1: int, x2: int, y2: int) -> bool:
     if (x1 - x2)**2 + (y1 - y2)**2 > 2:
         return False
     
-    if isOutside(x1, y1) or isOutside(x2, y2):
+    if is_outside(x1, y1) or is_outside(x2, y2):
         return False
     
     return is_connected_straight(x1, y1, x2, y2) or is_connected_diagonally(x1, y1, x2, y2)

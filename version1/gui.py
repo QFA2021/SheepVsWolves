@@ -67,7 +67,7 @@ def on_draw():
     batch = pg.graphics.Batch()
     for row in range(7):
         for column in range(7):
-            if game.isOutside(column, row): continue
+            if game.is_outside(column, row): continue
             x = column * grid_margin
             y = row * grid_margin
             circle = pg.shapes.Circle(x+center_margin, y+center_margin, 
@@ -82,7 +82,7 @@ def on_draw():
             pos = ind_to_cord(row, column)
             entry = gb[row][column]
             if entry!=None:
-                pic = image.load(entry.getImage())
+                pic = image.load(entry.get_image())
                 pic.anchor_x = pic.width // 2
                 pic.anchor_y = pic.height // 2
                 pic.blit(pos[0], pos[1])                

@@ -2,17 +2,17 @@ import abc
 import os
 
 class Piece(abc.ABC):
-    def getImage(self):
+    def get_image(self):
         pass
     
-    def isValid(xFrom, yFrom, xTo, yTo):
+    def is_move_valid(xFrom, yFrom, xTo, yTo):
         pass
         
 class Sheep(Piece):
-    def getImage(self):
+    def get_image(self):
         return "icons/cute_sheep_transparent.png"
     
-    def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
+    def is_move_valid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check sheep going down
         down = (yTo <= yFrom)
         #check step length
@@ -31,10 +31,10 @@ class Sheep(Piece):
 
     
 class Wolf(Piece):
-    def getImage(self):
+    def get_image(self):
         return "icons/wolf_transparent.png"
             
-    def isValid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
+    def is_move_valid(xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check step length
         dist_square = (xTo-xFrom)**2 + (yTo-yFrom)**2
         if (dist_square==1 or dist_square==2 or dist_square==4 or dist_square==8):
