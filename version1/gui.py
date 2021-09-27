@@ -8,6 +8,9 @@ window_width = 800
 grid_margin = 100
 field_radius = 30
 field_color = (255, 0, 24)
+selected_color = (24, 0, 255)
+grid_margin = 100
+window_width = 800
 center_margin = window_width/2 - 3*grid_margin
 
 
@@ -43,11 +46,13 @@ def on_mouse_press(x,y,button,modifiers):
 current_game = game.Game()
 
 # TODOS:
-# programmeticly draw the gameboard 
-# for the concrete placement of the pieces get the images from the subclasses
-# on click pass it on the the gameBoard
-
-
+# - double jump
+# - signal that game is over (restart)
+# - show how move it is
+# - sheep counter
+# (- reselecting)
+# - quantum mechanics
+# (- mode selection)
 
 @window.event
 def on_draw():
@@ -88,8 +93,13 @@ def on_draw():
             if game.is_outside(column, row): continue
             x = column * grid_margin
             y = row * grid_margin
+            
+            color = field_color
+            if current_game.selected_x == column and current_game.selected_y == 6 - row:
+                color = selected_color
+            
             circle = pg.shapes.Circle(x+center_margin, y+center_margin, 
-                                      field_radius, color=field_color, batch=batch)
+                                      field_radius, color=color, batch=batch)
             batch.draw()
     
     #draw sheep
@@ -106,8 +116,11 @@ def on_draw():
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     if button == mouse.LEFT:
-        print(get_indices(x, y))
-        # game.mark_field
+        indices = get_indices(x, y)
+        print (indices)
+        if current_game.is_clickable(indices[0], indices[1]):
+            current_game.click_action(indices[0], indices[1])
+        
         
 def get_indices(x, y):
     (i,j) = (-1, -1)
