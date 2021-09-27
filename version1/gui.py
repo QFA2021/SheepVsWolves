@@ -18,7 +18,6 @@ center_margin = window_width/2 - 3*grid_margin
 intro = pg.window.Window(window_width, window_width, visible=True)
 #making game window
 window = pg.window.Window(window_width, window_width, visible=False)
-window.set_visible()
 
 @intro.event
 def on_draw():
@@ -26,21 +25,42 @@ def on_draw():
     menu = pg.text.Label("MENU", font_name = 'Times New Roman', font_size = 50, x = intro.width//2, y = intro.height,
                          anchor_x = 'center', anchor_y = 'top')
     menu.draw()
-    start_rectangle = pg.shapes.BorderedRectangle(intro.width//2 - intro.width//4,intro.height//2,
-                                                  intro.width//2, intro.height//5,
+    #start game
+    start_rectangle = pg.shapes.BorderedRectangle(intro.width//2,intro.height//2,
+                                                  intro.width//2, intro.height//4,
                                                   border = 20, color = (255, 0, 24), border_color = (0,0,255))
+    start_rectangle.anchor_position = (intro.width//4, 0)
     start_rectangle.opacity = 160
     start_rectangle.draw()
     start_text = pg.text.Label("Start Game", font_name = 'Times New Roman', font_size = 30,
-                               x = intro.width//2, y = intro.height//2 + intro.height//8,
+                               x = intro.width//2, y = intro.height//2 + 15*intro.height//100,
                                anchor_x = 'center', anchor_y = 'top')
     start_text.draw()
+    #start quantum game
+    q_start_rectangle = pg.shapes.BorderedRectangle(intro.width//2,intro.height//4,
+                                                  intro.width//2, intro.height//4,
+                                                  border = 20, color = (255, 0, 24), border_color = (0,0,255))
+    q_start_rectangle.anchor_position = (intro.width//4, 0)
+    q_start_rectangle.opacity = 160
+    q_start_rectangle.draw()
+    q_start_text = pg.text.Label("Start Quantum Game", font_name = 'Times New Roman', font_size = 30,
+                               x = intro.width//2, y = intro.height//4 + 15*intro.height//100,
+                               anchor_x = 'center', anchor_y = 'top')
+    q_start_text.draw()
+    
+@intro.event
+def on_close():
+    window.close()
 
 @intro.event
 def on_mouse_press(x,y,button,modifiers):
-    if button == mouse.LEFT:
+    if button == mouse.LEFT and x>intro.width//4 and x<3*intro.width//4 and y>intro.width//2 and y<3*intro.width//4:
         intro.close()
         window.set_visible()
+    if button == mouse.LEFT and x>intro.width//4 and x<3*intro.width//4 and y>intro.width//4 and y<intro.width//2:
+        intro.close()
+        window.set_visible()
+        #TODO set quantum
 
 # Initialization stuff here
 current_game = game.Game()
