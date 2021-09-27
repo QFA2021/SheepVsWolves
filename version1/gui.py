@@ -105,7 +105,7 @@ def get_indices(x, y):
             temp_dist = (x-grid_margin*a)**2 + (y-grid_margin*b)**2
             if temp_dist <= field_radius**2:
                 (i,j) = (a,6-b)
-    if game.isOutside(i,j):
+    if game.is_outside(i,j):
         return (-1,-1)
     return (i,j)
 
