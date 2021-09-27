@@ -17,7 +17,7 @@ class TurnState(enum.Enum):
     
     # Tracks whether the game is over. This is the case if ether there are
     # less than 9 sheep left or the stable is full
-    over = 9
+    OVER = 9
     
 class Game:
     
@@ -35,8 +35,10 @@ class Game:
         
         self.selected_x = -1
         self.selected_y = -1
-        
+
         self.teleportation_cooldown = 0
+        self.teleportation_just_activated = False
+
         
         self.init_gameboard()
             
@@ -92,8 +94,7 @@ class Game:
     # Attention:    Before calling this method, check whether this point is 
     #               clickable!
     def click_action(self, x: int, y: int):
-        self.deselect()
-        
+
         # SELECTING
         if self.state == TurnState.SELECTING:
             self.selected_x = x
@@ -109,19 +110,14 @@ class Game:
                 self.move_sheep(piece, x, y)
             elif type(piece) is Wolf:
                 self.move_wolf(piece, x, y)
-             
+
         # TELEPORTATION
         elif self.state == TurnState.SELECTING_TP_PARTNER:
             print (f"{x},{y} selected for swapping")
             self.swap(x, y, self.selected_x, self.selected_y)
-            
-            
+
         self.update_state()
-        
-        
-    def deselect(self):
-        self.selected_x = -1
-        self.selected_y = -1
+
         
     def update_state(self):
         if self.state == TurnState.SELECTING:
@@ -129,20 +125,34 @@ class Game:
             
         elif self.state == TurnState.MOVING:
             self.state = TurnState.SELECTING
-            self.sheeps_turn = not self.sheeps_turn
+
+            if self.teleportation_just_activated == True:
+                self.teleportation_just_activated = False
+                self.state = TurnState.SELECTING_TP_PARTNER
+            else:
+                self.sheeps_turn = not self.sheeps_turn
             
         elif self.state == TurnState.SELECTING_TP_PARTNER:
             self.state = TurnState.SELECTING
-            self.sheeps_turn = not self.sheeps_turn 
+            self.sheeps_turn = True
             self.teleportation_cooldown = 3
-            
+
+
+
         if self.sheep_in_stable >= 9:
-            self.state = TurnState.over
+            self.state = TurnState.OVER
             print("Sheep won!")
 
         if self.sheep_left < 9:
-            self.state = TurnState.over
+            self.state = TurnState.OVER
             print ("Wolf won!")
+
+        self.deselect()
+
+    def deselect(self):
+        if self.state == TurnState.OVER or self.state == TurnState.SELECTING:
+            self.selected_x = -1
+            self.selected_y = -1
             
         
     def swap(self, x1, y1, x2, y2):
@@ -180,7 +190,9 @@ class Game:
                 
         # Teleportation
         if self.is_teleportation(x, y) and self.teleportation_cooldown == 0:
-            self.state == TurnState.SELECTING_TP_PARTNER
+            self.teleportation_just_activated = True
+            self.selected_x = x
+            self.selected_y = y
             print ("Teleportation activated!")
         
         if self.teleportation_cooldown > 0:
@@ -193,10 +205,7 @@ class Game:
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int): 
         self.gameboard[self.selected_x][self.selected_y] = None
         self.gameboard[x][y] = piece
-    
 
-
-    
     
     def is_empty(self, x, y) -> bool:
         if not is_outside(x, y):
@@ -205,10 +214,7 @@ class Game:
     
     def is_teleportation(self, x: int, y: int) -> bool:
         return x == 3 and y == 3
-    
-    
-    
-        
+
     
 
 def is_in_stable(x: int, y: int) -> bool:
