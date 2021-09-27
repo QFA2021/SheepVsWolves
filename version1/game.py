@@ -18,6 +18,9 @@ class TurnState(enum.Enum):
     # Tracks whether the game is over. This is the case if ether there are
     # less than 9 sheep left or the stable is full
     OVER = 9
+
+    def requires_selection(self):
+        return self == self.MOVING or self == self.SELECTING_TP_PARTNER
     
 class Game:
     
@@ -147,10 +150,10 @@ class Game:
             self.state = TurnState.OVER
             print ("Wolf won!")
 
-        self.deselect()
+        self.manage_selection()
 
-    def deselect(self):
-        if self.state == TurnState.OVER or self.state == TurnState.SELECTING:
+    def manage_selection(self):
+        if not self.state.requires_selection():
             self.selected_x = -1
             self.selected_y = -1
             
