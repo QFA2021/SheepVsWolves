@@ -8,6 +8,10 @@ from pieces import Sheep, Wolf
 import enum
 import pieces
 
+class GameMode(enum.Enum):
+    NORMAL = 1
+    QUANTUM = 2
+
 # The state indicates which action is next to be performed
 class TurnState(enum.Enum):
     SELECTING = 1
@@ -27,9 +31,11 @@ class Game:
     gameboard = []
     
     # Store the placement of the pieces
-    def __init__(self):    
+    def __init__(self, mode):
         self.sheep_in_stable = 0
         self.sheep_left = 20
+
+        self.mode = mode
         
         # Indicating whether its the sheep players or the wolfs turn
         self.sheeps_turn = True
@@ -192,14 +198,15 @@ class Game:
                 self.sheep_in_stable -= 1
                 
         # Teleportation
-        if self.is_teleportation(x, y) and self.teleportation_cooldown == 0:
-            self.teleportation_just_activated = True
-            self.selected_x = x
-            self.selected_y = y
-            print ("Teleportation activated!")
-        
-        if self.teleportation_cooldown > 0:
-            self.teleportation_cooldown -= 1            
+        if self.mode == GameMode.QUANTUM:
+            if self.is_teleportation(x, y) and self.teleportation_cooldown == 0:
+                self.teleportation_just_activated = True
+                self.selected_x = x
+                self.selected_y = y
+                print ("Teleportation activated!")
+
+            if self.teleportation_cooldown > 0:
+                self.teleportation_cooldown -= 1
                 
         print (f"wolf moved to {x},{y}")
 
@@ -216,6 +223,8 @@ class Game:
         return False
     
     def is_teleportation(self, x: int, y: int) -> bool:
+        if self.mode == GameMode.NORMAL:
+            return False
         return x == 3 and y == 3
 
     

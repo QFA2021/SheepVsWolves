@@ -19,7 +19,7 @@ center_margin = window_width/2 - 3*grid_margin
 window = pg.window.Window(window_width, window_width, visible=False)
 
 # Initialization stuff here
-current_game = game.Game()
+current_game = game.Game(game.GameMode.NORMAL)
 
 window.set_visible()
 
