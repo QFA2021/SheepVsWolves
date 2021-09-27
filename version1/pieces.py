@@ -1,5 +1,4 @@
 import abc
-import os
 
 class Piece(abc.ABC):
     def get_image(self):
@@ -28,8 +27,7 @@ class Sheep(Piece):
     # - superposition
     # - image depending on superposition / entanglement
     # - specific movement
-
-    
+ 
 class Wolf(Piece):
     def get_image(self):
         return "icons/wolf_transparent.png"

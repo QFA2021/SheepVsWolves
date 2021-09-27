@@ -1,10 +1,7 @@
 import pyglet as pg
-from game import Game 
 import game
 from pyglet.window import mouse
-import numpy as np
 from pyglet import image
-import pieces
 from pyglet.gl import *
 
 field_radius = 30
@@ -49,18 +46,15 @@ def on_draw():
                 for offset_column in range(-1, 2):
                     row2 = row + offset_row
                     column2 = column + offset_column
-                    
                     if game.is_connected(column, row, column2, row2):
                         pos1 = ind_to_cord(row, column)
                         pos2 = ind_to_cord(row2, column2)
-                        
                         line = pg.shapes.Line(pos1[0], pos1[1],
                                               pos2[0], pos2[1],
                                               width=5,
                                               color = field_color,
-                                              batch=batch)
-                        
-                        batch.draw()
+                                              batch=batch)  
+                    batch.draw()
 
     
     # draw circles
@@ -73,10 +67,8 @@ def on_draw():
             circle = pg.shapes.Circle(x+center_margin, y+center_margin, 
                                       field_radius, color=field_color, batch=batch)
             batch.draw()
-    batch.draw()
     
     #draw sheep
-    batch = pg.graphics.Batch()
     for row in range(7):
         for column in range(7):
             pos = ind_to_cord(row, column)
@@ -86,9 +78,6 @@ def on_draw():
                 pic.anchor_x = pic.width // 2
                 pic.anchor_y = pic.height // 2
                 pic.blit(pos[0], pos[1])                
-
-
-
     
 @window.event
 def on_mouse_press(x, y, button, modifiers):
