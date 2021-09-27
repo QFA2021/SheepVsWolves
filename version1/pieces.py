@@ -9,7 +9,13 @@ class Piece(abc.ABC):
     
     def is_move_valid(gameboard, x_from, y_from, x_to, y_to):
         pass
-        
+
+
+def get_path(file:  str) -> str:
+    path = str(pathlib.Path().resolve())
+    if not path.__contains__("version1"):
+        path += "/version1"
+    return f"{path}/{file}"
         
 class Sheep(Piece):
 
@@ -17,8 +23,7 @@ class Sheep(Piece):
         self.entanglement_id = -1
 
     def get_image(self):
-        path = pathlib.Path().resolve()
-        return f"{path}/version1/icons/cute_sheep_transparent.png"
+        return get_path("icons/cute_sheep_transparent.png")
     
     def is_move_valid(self, gameboard, x_from: int, y_from: int, x_to: int, y_to: int) -> bool:
         # check sheep going down
@@ -46,8 +51,7 @@ def is_capture_move(x_from :int, y_from :int, x_to :int, y_to :int) -> bool:
 
 class Wolf(Piece):
     def get_image(self):
-        path = pathlib.Path().resolve()
-        return f"{path}/version1/icons/wolf_transparent.png"
+        return get_path("icons/wolf_transparent.png")
             
     def is_move_valid(self, gameboard, x_from :int, y_from :int, x_to :int, y_to :int) -> bool:
         if not is_capture_move(x_from, y_from, x_to, y_to):

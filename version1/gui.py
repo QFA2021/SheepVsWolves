@@ -95,8 +95,8 @@ def on_draw():
     gb = current_game.gameboard
     
     #background
-    path = pathlib.Path().resolve()
-    pic = image.load(f"{path}/version1/icons/background.png")
+    path = pieces.get_path("icons/background.png")
+    pic = image.load(path)
     pic.blit(0,0)
     
     # draw grid
