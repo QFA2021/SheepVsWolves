@@ -69,7 +69,7 @@ class Game:
         if not self.is_empty(x, y):
             return False
         
-        valid = selected_piece.is_move_valid(self.selected_x, self.selected_y, x, y)
+        valid = selected_piece.is_move_valid(self.gameboard, self.selected_x, self.selected_y, x, y)
         print (f"is move to {x},{y} valid {valid}")
         return valid
         
