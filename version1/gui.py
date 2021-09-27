@@ -25,6 +25,10 @@ intro = pg.window.Window(window_width, window_width, visible=True)
 #making game window
 window = pg.window.Window(window_width, window_width, visible=False)
 
+
+# Initialization stuff here
+current_game = game.Game(game.GameMode.NORMAL)
+
 @intro.event
 def on_draw():
     intro.clear()
@@ -60,16 +64,16 @@ def on_close():
 
 @intro.event
 def on_mouse_press(x,y,button,modifiers):
+    global current_game
+
     if button == mouse.LEFT and x>intro.width//4 and x<3*intro.width//4 and y>intro.width//2 and y<3*intro.width//4:
         intro.close()
         window.set_visible()
     if button == mouse.LEFT and x>intro.width//4 and x<3*intro.width//4 and y>intro.width//4 and y<intro.width//2:
         intro.close()
         window.set_visible()
-        #TODO set quantum
+        current_game = game.Game(game.GameMode.QUANTUM)
 
-# Initialization stuff here
-current_game = game.Game(game.GameMode.QUANTUM)
 
 # TODOS:
 # - double jump
