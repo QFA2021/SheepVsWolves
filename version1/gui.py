@@ -4,19 +4,43 @@ from pyglet.window import mouse
 from pyglet import image
 from pyglet.gl import *
 
+window_width = 800
+grid_margin = 100
 field_radius = 30
 field_color = (255, 0, 24)
-grid_margin = 100
-window_width = 800
 center_margin = window_width/2 - 3*grid_margin
 
 
+#making an intro screen
+intro = pg.window.Window(window_width, window_width, visible=True)
+#making game window
 window = pg.window.Window(window_width, window_width, visible=False)
+window.set_visible()
+
+@intro.event
+def on_draw():
+    intro.clear()
+    menu = pg.text.Label("MENU", font_name = 'Times New Roman', font_size = 50, x = intro.width//2, y = intro.height,
+                         anchor_x = 'center', anchor_y = 'top')
+    menu.draw()
+    start_rectangle = pg.shapes.BorderedRectangle(intro.width//2 - intro.width//4,intro.height//2,
+                                                  intro.width//2, intro.height//5,
+                                                  border = 20, color = (255, 0, 24), border_color = (0,0,255))
+    start_rectangle.opacity = 160
+    start_rectangle.draw()
+    start_text = pg.text.Label("Start Game", font_name = 'Times New Roman', font_size = 30,
+                               x = intro.width//2, y = intro.height//2 + intro.height//8,
+                               anchor_x = 'center', anchor_y = 'top')
+    start_text.draw()
+
+@intro.event
+def on_mouse_press(x,y,button,modifiers):
+    if button == mouse.LEFT:
+        intro.close()
+        window.set_visible()
 
 # Initialization stuff here
 current_game = game.Game()
-
-window.set_visible()
 
 # TODOS:
 # programmeticly draw the gameboard 
