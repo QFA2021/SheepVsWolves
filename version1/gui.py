@@ -93,7 +93,7 @@ def on_draw():
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     
     gb = current_game.gameboard
-    
+    print('draw')
     #background
     path = pieces.get_path("icons/background.png")
     pic = image.load(path)
