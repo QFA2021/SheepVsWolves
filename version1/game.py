@@ -4,6 +4,8 @@ Created on Thu Sep 23 09:16:36 2021
 
 @author: Elias, Jan, Martin
 """
+import random
+
 from pieces import Sheep, Wolf
 import enum
 import pieces
@@ -16,7 +18,12 @@ class GameMode(enum.Enum):
 class TurnState(enum.Enum):
     SELECTING = 1
     MOVING = 2
+
+    # selecting a swapping partner as a wolf after moving onto the teleportation field
     SELECTING_TP_PARTNER = 3
+
+    # placing the other entangled sheep into the stable when one of them gets there
+    PLACE_IN_STABLE = 4
     
     
     # Tracks whether the game is over. This is the case if ether there are
@@ -24,13 +31,13 @@ class TurnState(enum.Enum):
     OVER = 9
 
     def requires_selection(self):
-        return self == self.MOVING or self == self.SELECTING_TP_PARTNER
-    
+        return self == self.MOVING or self == self.SELECTING_TP_PARTNER \
+               or self == self.PLACE_IN_STABLE
+
 class Game:
     
     gameboard = []
     
-    # Store the placement of the pieces
     def __init__(self, mode):
         self.sheep_in_stable = 0
         self.sheep_left = 20
@@ -48,7 +55,8 @@ class Game:
         self.teleportation_cooldown = 0
         self.teleportation_just_activated = False
 
-        
+        self.entanglement_just_activated = False
+
         self.init_gameboard()
             
             
@@ -56,15 +64,28 @@ class Game:
         self.gameboard = [[None for x in range (7)] for y in range (7)]
         
         # add sheep
+        sheep = []
         for y in range(4):
             for x in range(7):
                 if not is_outside(x,y):
-                    self.gameboard[x][y] = Sheep()
-                
-               
+                    s = Sheep()
+                    sheep.append(s)
+                    self.gameboard[x][y] = s
+
         # add wolfs
         self.gameboard[2][4] = Wolf()
         self.gameboard[4][4] = Wolf()
+
+        if self.mode == GameMode.QUANTUM:
+            self.init_random_entanglement(sheep)
+
+    def init_random_entanglement(self, sheep):
+        for i in range(3):
+            (sheep1, sheep2) = random.sample(sheep, 2)
+            sheep1.entanglement_id = i
+            sheep2.entanglement_id = i
+            sheep.remove(sheep1)
+            sheep.remove(sheep2)
         
         
     def is_clickable(self, x: int, y: int) -> bool:
@@ -93,6 +114,10 @@ class Game:
         elif self.state == TurnState.SELECTING_TP_PARTNER:
             piece = self.gameboard[x][y]
             return type(piece) == Sheep and not is_in_stable(x, y)
+
+        # ENTANGLEMENT
+        elif self.state == TurnState.PLACE_IN_STABLE:
+            return is_in_stable(x, y) and self.is_empty(x, y)
         
     
     def get_selected_piece(self) -> pieces.Piece:
@@ -125,29 +150,54 @@ class Game:
             print (f"{x},{y} selected for swapping")
             self.swap(x, y, self.selected_x, self.selected_y)
 
+         # ENTANGLEMENT
+        elif self.state == TurnState.PLACE_IN_STABLE:
+            entangled_sheep = self.get_selected_piece()
+            self.move_sheep(entangled_sheep, x, y)
+
         self.update_state()
 
         
     def update_state(self):
+        # SELECTING
         if self.state == TurnState.SELECTING:
             self.state = TurnState.MOVING
-            
+
+        # MOVING
         elif self.state == TurnState.MOVING:
             self.state = TurnState.SELECTING
 
             if self.teleportation_just_activated == True:
                 self.teleportation_just_activated = False
                 self.state = TurnState.SELECTING_TP_PARTNER
+
+            elif self.entanglement_just_activated == True:
+                self.entanglement_just_activated = False
+                self.state = TurnState.PLACE_IN_STABLE
+
             else:
                 self.sheeps_turn = not self.sheeps_turn
-            
+
+        # TELEPORTATION
         elif self.state == TurnState.SELECTING_TP_PARTNER:
             self.state = TurnState.SELECTING
             self.sheeps_turn = True
             self.teleportation_cooldown = 3
 
+        # ENTANGLEMENT
+        elif self.state == TurnState.PLACE_IN_STABLE:
+            self.state = TurnState.SELECTING
+            self.sheeps_turn = False
 
+        self.check_win()
+        self.manage_selection()
 
+    def manage_selection(self):
+        if not self.state.requires_selection():
+            self.selected_x = -1
+            self.selected_y = -1
+
+    def check_win(self):
         if self.sheep_in_stable >= 9:
             self.state = TurnState.OVER
             print("Sheep won!")
@@ -155,14 +205,6 @@ class Game:
         if self.sheep_left < 9:
             self.state = TurnState.OVER
             print ("Wolf won!")
-
-        self.manage_selection()
-
-    def manage_selection(self):
-        if not self.state.requires_selection():
-            self.selected_x = -1
-            self.selected_y = -1
-            
         
     def swap(self, x1, y1, x2, y2):
         temp = self.gameboard[x1][y1]
@@ -174,6 +216,20 @@ class Game:
         
         if is_in_stable(x, y):
             self.sheep_in_stable += 1
+
+            # entangled sheep
+            id = sheep.entanglement_id
+            if id != -1:
+                pos = self.find_entangled_sheep(id)
+                if pos != (-1, -1):
+                    self.selected_x = pos[0]
+                    self.selected_y = pos[1]
+                    self.entanglement_just_activated = True
+
+                    sheep.entanglement_id = -1
+                    sheep2 = self.gameboard[pos[0]][pos[1]]
+                    sheep2.entanglement_id = -1
+
             
         print (f"sheep moved to {x},{y}")
 
@@ -190,12 +246,7 @@ class Game:
             in_between_x = (x + self.selected_x) // 2
             in_between_y = (y + self.selected_y) // 2
             
-            self.gameboard[in_between_x][in_between_y] = None
-            self.sheep_left -= 1
-            
-            # Sheep in the stable has been eaten
-            if is_in_stable(in_between_x, in_between_y):
-                self.sheep_in_stable -= 1
+            self.capture_sheep(in_between_x, in_between_y)
                 
         # Teleportation
         if self.mode == GameMode.QUANTUM:
@@ -210,8 +261,34 @@ class Game:
                 
         print (f"wolf moved to {x},{y}")
 
-            
-            
+    def capture_sheep(self, x, y):
+        sheep = self.gameboard[x][y]
+        self.gameboard[x][y] = None
+        self.sheep_left -= 1
+
+        # deal with entanglement
+        id = sheep.entanglement_id
+        if id != -1:
+            entangled = self.find_entangled_sheep(id)
+            if entangled != (-1, -1):
+                self.capture_sheep(entangled[0], entangled[1])
+
+        # Sheep in the stable has been eaten
+        if is_in_stable(x, y):
+            self.sheep_in_stable -= 1
+
+    def find_entangled_sheep(self, id) -> (int, int):
+        for x in range(7):
+            for y in range(7):
+                if is_in_stable(x, y):
+                    continue
+                piece = self.gameboard[x][y]
+                if type(piece) is Sheep:
+                    if piece.entanglement_id is id:
+                        return (x, y)
+
+        return (-1, -1)
+
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int): 
         self.gameboard[self.selected_x][self.selected_y] = None
         self.gameboard[x][y] = piece

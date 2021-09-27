@@ -5,6 +5,8 @@ from pyglet import image
 from pyglet.gl import *
 import pathlib
 
+import pieces
+
 field_radius = 30
 field_color = (255, 0, 24)
 selected_color = (24, 0, 255)
@@ -19,7 +21,7 @@ center_margin = window_width/2 - 3*grid_margin
 window = pg.window.Window(window_width, window_width, visible=False)
 
 # Initialization stuff here
-current_game = game.Game(game.GameMode.NORMAL)
+current_game = game.Game(game.GameMode.QUANTUM)
 
 window.set_visible()
 
@@ -97,17 +99,28 @@ def on_draw():
             circle = pg.shapes.Circle(x, y, field_radius, color=color, batch=batch)
             batch.draw()
     
-    #draw sheep
+    # draw sheep and wolfs
     for row in range(7):
         for column in range(7):
             pos = ind_to_cord(row, column)
             entry = gb[row][column]
-            if entry!=None:
+            if entry is not None:
                 pic = image.load(entry.get_image())
                 pic.anchor_x = pic.width // 2
                 pic.anchor_y = pic.height // 2
-                pic.blit(pos[0], pos[1])                
-    
+                pic.blit(pos[0], pos[1])
+
+            # marking entanglement
+            if type(entry) is pieces.Sheep:
+                if entry.entanglement_id != -1:
+                    id = entry.entanglement_id
+                    x = pos[0] + 20
+                    y = pos[1] + 20
+                    label = pg.text.Label(str(id), font_size=18, x=x, y=y)
+                    label.color = (255, 255, 0, 255)
+                    label.draw()
+
+
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     if button == mouse.LEFT:

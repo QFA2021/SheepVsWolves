@@ -9,6 +9,10 @@ class Piece(abc.ABC):
         pass
         
 class Sheep(Piece):
+
+    def __init__(self):
+        self.entanglement_id = -1
+
     def get_image(self):
         path = pathlib.Path().resolve()
         return f"{path}/version1/icons/cute_sheep_transparent.png"
@@ -21,14 +25,8 @@ class Sheep(Piece):
         if down and (dist_square==1 or dist_square==2):
             return True
         return False
-    
-    ENTANGLED = False
-    SUPERPOSITION = False
-    # Create methods and variables for
-    # - entangled
-    # - superposition
-    # - image depending on superposition / entanglement
-    # - specific movement
+
+
  
 class Wolf(Piece):
     def get_image(self):
