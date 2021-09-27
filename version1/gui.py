@@ -77,7 +77,6 @@ current_game = game.Game()
 @window.event
 def on_draw():
     window.clear()
-    
     glEnable(GL_BLEND)
     glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
     
@@ -136,10 +135,16 @@ def on_draw():
 @window.event
 def on_mouse_press(x, y, button, modifiers):
     if button == mouse.LEFT:
-        indices = get_indices(x, y)
-        print (indices)
-        if current_game.is_clickable(indices[0], indices[1]):
-            current_game.click_action(indices[0], indices[1])
+        global indices_leftclick
+        indices_leftclick = get_indices(x, y)
+        print(indices_leftclick)
+        if current_game.is_clickable(indices_leftclick[0], indices_leftclick[1]):
+            current_game.click_action(indices_leftclick[0], indices_leftclick[1])
+    if button == mouse.RIGHT:
+        indices_rightclick = get_indices(x,y)
+        print(indices_rightclick, indices_leftclick)
+        if indices_leftclick == indices_rightclick:
+            current_game.deselect_piece()
         
         
 def get_indices(x, y):

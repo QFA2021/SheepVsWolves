@@ -99,14 +99,18 @@ class Game:
                 
             self.deselect()
             
-            
         self.update_state()
         
         
     def deselect(self):
         self.selected_x = -1
         self.selected_y = -1
+    
+    def deselect_piece(self):
+        print('deselect')
+        self.state = TurnState.selecting
         
+
     def update_state(self):
         if self.state == TurnState.selecting:
             self.state = TurnState.moving
@@ -128,8 +132,9 @@ class Game:
     def move_sheep(self, sheep: Sheep, x: int, y: int):
         self.move_piece_simple(sheep, x, y)
         
-        if is_in_stable(x, y):
+        if is_in_stable(x, y) and not is_in_stable(self.selected_x, self.selected_y):
             self.sheep_in_stable += 1
+            print(self.sheep_in_stable)
             
         print (f"sheep moved to {x},{y}")
 
