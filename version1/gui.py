@@ -174,11 +174,6 @@ def on_mouse_press(x, y, button, modifiers):
         print(indices_leftclick)
         if current_game.is_clickable(indices_leftclick[0], indices_leftclick[1]):
             current_game.click_action(indices_leftclick[0], indices_leftclick[1])
-    if button == mouse.RIGHT:
-        indices_rightclick = get_indices(x,y)
-        print(indices_rightclick, indices_leftclick)
-        if indices_leftclick == indices_rightclick:
-            current_game.deselect_piece()
         
         
 def get_indices(x, y):
