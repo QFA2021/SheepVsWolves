@@ -55,7 +55,7 @@ class Game:
         self.teleportation_cooldown = 0
         self.teleportation_just_activated = False
 
-        self.entanglement_just_activated = False
+        self.entanglement_id_to_remove = -1
 
         self.init_gameboard()
             
@@ -171,8 +171,7 @@ class Game:
                 self.teleportation_just_activated = False
                 self.state = TurnState.SELECTING_TP_PARTNER
 
-            elif self.entanglement_just_activated == True:
-                self.entanglement_just_activated = False
+            elif self.entanglement_id_to_remove != -1:
                 self.state = TurnState.PLACE_IN_STABLE
 
             else:
@@ -186,6 +185,7 @@ class Game:
 
         # ENTANGLEMENT
         elif self.state == TurnState.PLACE_IN_STABLE:
+            self.remove_entanglement()
             self.state = TurnState.SELECTING
             self.sheeps_turn = False
 
@@ -224,13 +224,8 @@ class Game:
                 if pos != (-1, -1):
                     self.selected_x = pos[0]
                     self.selected_y = pos[1]
-                    self.entanglement_just_activated = True
+                    self.entanglement_id_to_remove = id
 
-                    sheep.entanglement_id = -1
-                    sheep2 = self.gameboard[pos[0]][pos[1]]
-                    sheep2.entanglement_id = -1
-
-            
         print (f"sheep moved to {x},{y}")
 
 
@@ -288,6 +283,19 @@ class Game:
                         return (x, y)
 
         return (-1, -1)
+
+    def remove_entanglement(self):
+        print ("removing entanglement")
+        if self.entanglement_id_to_remove == -1:
+            return
+
+        for x in range(7):
+            for y in range(7):
+                piece = self.gameboard[x][y]
+                if type(piece) is pieces.Sheep:
+                    if piece.entanglement_id == self.entanglement_id_to_remove:
+                        self.gameboard[x][y].entanglement_id = -1
+
 
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int): 
         self.gameboard[self.selected_x][self.selected_y] = None
