@@ -5,7 +5,6 @@ Created on Thu Sep 23 09:16:36 2021
 @author: Elias, Jan, Martin
 """
 import random
-
 from pieces import Sheep, Wolf
 import enum
 import pieces
@@ -13,6 +12,7 @@ import pieces
 class GameMode(enum.Enum):
     NORMAL = 1
     QUANTUM = 2
+
 
 # The state indicates which action is next to be performed
 class TurnState(enum.Enum):
@@ -96,9 +96,9 @@ class Game:
             
             piece = self.gameboard[x][y]
             if self.sheeps_turn:
-                return type(piece) == Sheep
+                return type(piece) == pieces.Sheep
             else:
-                return type(piece) == Wolf
+                return type(piece) == pieces.Wolf
         
         # MOVING
         elif self.state == TurnState.MOVING:
@@ -106,7 +106,7 @@ class Game:
             if not self.is_empty(x, y):
                 return False
             
-            valid = selected_piece.is_move_valid(self.selected_x, self.selected_y, x, y)
+            valid = selected_piece.is_move_valid(self.gameboard, self.selected_x, self.selected_y, x, y)
             print (f"is move to {x},{y} valid {valid}")
             return valid
         
@@ -140,9 +140,9 @@ class Game:
             print (f"moving to {x},{y}")
             piece = self.get_selected_piece()
             
-            if type(piece) is Sheep:
+            if type(piece) is pieces.Sheep:
                 self.move_sheep(piece, x, y)
-            elif type(piece) is Wolf:
+            elif type(piece) is pieces.Wolf:
                 self.move_wolf(piece, x, y)
 
         # TELEPORTATION
@@ -157,7 +157,12 @@ class Game:
 
         self.update_state()
 
-        
+    
+    def deselect_piece(self):
+        print('deselect')
+        self.state = TurnState.selecting
+
+
     def update_state(self):
         # SELECTING
         if self.state == TurnState.SELECTING:
@@ -167,7 +172,7 @@ class Game:
         elif self.state == TurnState.MOVING:
             self.state = TurnState.SELECTING
 
-            if self.teleportation_just_activated == True:
+            if self.teleportation_just_activated:
                 self.teleportation_just_activated = False
                 self.state = TurnState.SELECTING_TP_PARTNER
 
@@ -205,16 +210,17 @@ class Game:
         if self.sheep_left < 9:
             self.state = TurnState.OVER
             print ("Wolf won!")
+
         
     def swap(self, x1, y1, x2, y2):
         temp = self.gameboard[x1][y1]
         self.gameboard[x1][y1] = self.gameboard[x2][y2]
         self.gameboard[x2][y2] = temp
 
-    def move_sheep(self, sheep: Sheep, x: int, y: int):
+    def move_sheep(self, sheep: pieces.Sheep, x: int, y: int):
         self.move_piece_simple(sheep, x, y)
         
-        if is_in_stable(x, y):
+        if is_in_stable(x, y) and not is_in_stable(self.selected_x, self.selected_y):
             self.sheep_in_stable += 1
 
             # entangled sheep
@@ -229,7 +235,7 @@ class Game:
         print (f"sheep moved to {x},{y}")
 
 
-    def move_wolf(self, wolf: Wolf, x: int, y: int):
+    def move_wolf(self, wolf: pieces.Wolf, x: int, y: int):
         self.move_piece_simple(wolf, x, y)
 
         capture = False
@@ -240,9 +246,9 @@ class Game:
             # A capture move was made, so a sheep has been captured
             in_between_x = (x + self.selected_x) // 2
             in_between_y = (y + self.selected_y) // 2
-            
+
             self.capture_sheep(in_between_x, in_between_y)
-                
+
         # Teleportation
         if self.mode == GameMode.QUANTUM:
             if self.is_teleportation(x, y) and self.teleportation_cooldown == 0:
@@ -296,15 +302,13 @@ class Game:
                     if piece.entanglement_id == self.entanglement_id_to_remove:
                         self.gameboard[x][y].entanglement_id = -1
 
-
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int): 
         self.gameboard[self.selected_x][self.selected_y] = None
         self.gameboard[x][y] = piece
 
-    
     def is_empty(self, x, y) -> bool:
         if not is_outside(x, y):
-            return self.gameboard[x][y] == None
+            return self.gameboard[x][y] is None
         return False
     
     def is_teleportation(self, x: int, y: int) -> bool:
@@ -312,13 +316,13 @@ class Game:
             return False
         return x == 3 and y == 3
 
-    
 
 def is_in_stable(x: int, y: int) -> bool:
     if y < 4: return False    
     if x < 2 or x > 4: return False
     return True
-    
+
+
 def is_outside(x: int, y: int) -> bool:
     if (x<0 or x>6): return True
     if (y<0 or y>6): return True    
@@ -326,6 +330,7 @@ def is_outside(x: int, y: int) -> bool:
         if x<2 or x>4:
             return True
     return False   
+
 
 # whether two points are connected on the gameboard via the grid
 def is_connected(x1: int, y1: int, x2: int, y2: int) -> bool:
@@ -344,7 +349,6 @@ def is_connected(x1: int, y1: int, x2: int, y2: int) -> bool:
 def is_connected_straight(x1: int, y1: int, x2: int, y2: int) -> bool:
     return (abs(x1 - x2) == 1) != (abs(y1 - y2) == 1)
 
-    
 
 def is_connected_diagonally(x1: int, y1: int, x2: int, y2: int) -> bool:
     return (x1 - y1) % 2 == 0 and (x2 - y2) % 2 == 0
