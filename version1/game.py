@@ -4,9 +4,9 @@ Created on Thu Sep 23 09:16:36 2021
 
 @author: Elias, Jan, Martin
 """
-from pieces import Sheep, Wolf
 import enum
 import pieces
+
 
 # The state indicates which action is next to be performed
 class TurnState(enum.Enum):
@@ -44,12 +44,12 @@ class Game:
         for y in range(4):
             for x in range(7):
                 if not is_outside(x,y):
-                    self.gameboard[x][y] = Sheep()
+                    self.gameboard[x][y] = pieces.Sheep()
                 
                
         # add wolfs
-        self.gameboard[2][4] = Wolf()
-        self.gameboard[4][4] = Wolf()
+        self.gameboard[2][4] = pieces.Wolf()
+        self.gameboard[4][4] = pieces.Wolf()
         
         
     def is_clickable(self, x: int, y: int) -> bool:
@@ -60,9 +60,9 @@ class Game:
             
             piece = self.gameboard[x][y]
             if self.sheeps_turn:
-                return type(piece) == Sheep
+                return type(piece) == pieces.Sheep
             else:
-                return type(piece) == Wolf
+                return type(piece) == pieces.pieces.Wolf
         
         # MOVING
         selected_piece = self.get_selected_piece()
@@ -92,9 +92,9 @@ class Game:
         elif self.state == TurnState.moving:
             piece = self.get_selected_piece()
             
-            if type(piece) is Sheep:
+            if type(piece) is pieces.Sheep:
                 self.move_sheep(piece, x, y)
-            elif type(piece) is Wolf:
+            elif type(piece) is pieces.Wolf:
                 self.move_wolf(piece, x, y)
                 
             self.deselect()
@@ -120,16 +120,16 @@ class Game:
             
         if self.sheep_in_stable >= 9:
             self.state = TurnState.over
-            print("Sheep won!")
+            print("pieces.Sheep won!")
 
         if self.sheep_left < 9:
             self.state = TurnState.over
-            print ("Wolf won!")
+            print ("pieces.Wolf won!")
             
         
     
 
-    def move_sheep(self, sheep: Sheep, x: int, y: int):
+    def move_sheep(self, sheep: pieces.Sheep, x: int, y: int):
         self.move_piece_simple(sheep, x, y)
         
         if is_in_stable(x, y) and not is_in_stable(self.selected_x, self.selected_y):
@@ -139,7 +139,7 @@ class Game:
         print (f"sheep moved to {x},{y}")
 
 
-    def move_wolf(self, wolf: Wolf, x: int, y: int):
+    def move_wolf(self, wolf: pieces.Wolf, x: int, y: int):
         self.move_piece_simple(wolf, x, y)
 
         capture = False
@@ -154,7 +154,7 @@ class Game:
             self.gameboard[in_between_x][in_between_y] = None
             self.sheep_left -= 1
             
-            # Sheep in the stable has been eaten
+            # pieces.Sheep in the stable has been eaten
             if is_in_stable(in_between_x, in_between_y):
                 self.sheep_in_stable -= 1
                 
