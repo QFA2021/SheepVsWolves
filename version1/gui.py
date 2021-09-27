@@ -7,6 +7,9 @@ from pyglet.gl import *
 field_radius = 30
 field_color = (255, 0, 24)
 selected_color = (24, 0, 255)
+teleportation_active_color = (201, 13, 155)
+teleportation_inactive_color = (30, 0, 30)
+
 grid_margin = 100
 window_width = 800
 center_margin = window_width/2 - 3*grid_margin
@@ -26,6 +29,8 @@ window.set_visible()
 # - sheep counter
 # (- reselecting)
 # - quantum mechanics
+#   - teleportation
+#   - entanglement
 # (- mode selection)
 
 @window.event
@@ -65,15 +70,29 @@ def on_draw():
     for row in range(7):
         for column in range(7):
             if game.is_outside(column, row): continue
-            x = column * grid_margin
-            y = row * grid_margin
+            x = column * grid_margin + center_margin
+            y = row * grid_margin + center_margin
             
+            
+            # teleportation field
+            if current_game.is_teleportation(column, 6 - row):
+                color = teleportation_inactive_color
+                if current_game.teleportation_cooldown == 0:
+                    color = teleportation_active_color
+                    
+                circle = pg.shapes.Circle(x, y, field_radius + 5, 
+                                          color=color, batch=batch)
+                batch.draw()
+            
+            
+            # mark selection
             color = field_color
             if current_game.selected_x == column and current_game.selected_y == 6 - row:
                 color = selected_color
+               
+          
             
-            circle = pg.shapes.Circle(x+center_margin, y+center_margin, 
-                                      field_radius, color=color, batch=batch)
+            circle = pg.shapes.Circle(x, y, field_radius, color=color, batch=batch)
             batch.draw()
     
     #draw sheep
