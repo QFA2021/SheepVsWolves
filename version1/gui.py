@@ -3,6 +3,7 @@ import game
 from pyglet.window import mouse
 from pyglet import image
 from pyglet.gl import *
+import pathlib
 
 field_radius = 30
 field_color = (255, 0, 24)
@@ -43,7 +44,8 @@ def on_draw():
     gb = current_game.gameboard
     
     #background
-    pic = image.load("icons/background.png")
+    path = pathlib.Path().resolve()
+    pic = image.load(f"{path}/version1/icons/background.png")
     pic.blit(0,0)
     
     # draw grid

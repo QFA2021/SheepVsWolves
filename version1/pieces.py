@@ -1,4 +1,5 @@
 import abc
+import pathlib
 
 class Piece(abc.ABC):
     def get_image(self):
@@ -9,7 +10,8 @@ class Piece(abc.ABC):
         
 class Sheep(Piece):
     def get_image(self):
-        return "icons/cute_sheep_transparent.png"
+        path = pathlib.Path().resolve()
+        return f"{path}/version1/icons/cute_sheep_transparent.png"
     
     def is_move_valid(self, xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check sheep going down
@@ -30,7 +32,8 @@ class Sheep(Piece):
  
 class Wolf(Piece):
     def get_image(self):
-        return "icons/wolf_transparent.png"
+        path = pathlib.Path().resolve()
+        return f"{path}/version1/icons/wolf_transparent.png"
             
     def is_move_valid(self, xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check step length
