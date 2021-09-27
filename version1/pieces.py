@@ -1,4 +1,5 @@
 import abc
+import game
 
 class Piece(abc.ABC):
     def get_image(self):
@@ -14,9 +15,8 @@ class Sheep(Piece):
     def is_move_valid(self, xFrom :int, yFrom :int, xTo :int, yTo :int) -> bool:
         #check sheep going down
         down = (yTo >= yFrom)
-        #check step length
-        dist_square = (xTo-xFrom)**2 + (yTo-yFrom)**2
-        if down and (dist_square==1 or dist_square==2):
+        #check connection
+        if game.is_connected(xFrom,yFrom,xTo,yTo) and down:
             return True
         return False
     
