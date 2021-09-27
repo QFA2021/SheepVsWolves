@@ -53,14 +53,25 @@ class Game:
         
         
     def is_clickable(self, x: int, y: int) -> bool:
+        # SELECTING
         if self.state == TurnState.selecting:
-            return not self.isEmpty(x, y)
+            if self.is_empty(x, y):
+                return False
+            
+            piece = self.gameboard[x][y]
+            if self.sheeps_turn:
+                return type(piece) == Sheep
+            else:
+                return type(piece) == Wolf
         
+        # MOVING
         selected_piece = self.get_selected_piece()
-        if not self.isEmpty(self.selected_x, self.selected_y):
+        if not self.is_empty(x, y):
             return False
         
-        return selected_piece.isValid(self.selected_x, self.selected_y, x, y)
+        valid = selected_piece.is_move_valid(self.selected_x, self.selected_y, x, y)
+        print (f"is move to {x},{y} valid {valid}")
+        return valid
         
     
     def get_selected_piece(self) -> pieces.Piece:
@@ -71,10 +82,13 @@ class Game:
     # Attention:    Before calling this method, check whether this point is 
     #               clickable!
     def click_action(self, x: int, y: int):
+        # SELECTING
         if self.state == TurnState.selecting:
             self.selected_x = x
             self.selected_y = y
-                        
+            print (f"{x},{y} selected")
+             
+        # MOVING
         elif self.state == TurnState.moving:
             piece = self.get_selected_piece()
             
@@ -82,18 +96,33 @@ class Game:
                 self.move_sheep(piece, x, y)
             elif type(piece) is Wolf:
                 self.move_wolf(piece, x, y)
+                
+            self.deselect()
             
             
         self.update_state()
+        
+        
+    def deselect(self):
+        self.selected_x = -1
+        self.selected_y = -1
         
     def update_state(self):
         if self.state == TurnState.selecting:
             self.state = TurnState.moving
         elif self.state == TurnState.moving:
             self.state = TurnState.selecting
+            self.sheeps_turn = not self.sheeps_turn
             
-        if self.sheep_in_stable >= 9 or self.sheep_left < 9:
+        if self.sheep_in_stable >= 9:
             self.state = TurnState.over
+            print("Sheep won!")
+
+        if self.sheep_left < 9:
+            self.state = TurnState.over
+            print ("Wolf won!")
+            
+        
     
 
     def move_sheep(self, sheep: Sheep, x: int, y: int):
@@ -101,6 +130,8 @@ class Game:
         
         if is_in_stable(x, y):
             self.sheep_in_stable += 1
+            
+        print (f"sheep moved to {x},{y}")
 
 
     def move_wolf(self, wolf: Wolf, x: int, y: int):
@@ -112,8 +143,8 @@ class Game:
         
         if capture:
             # A capture move was made, so a sheep has been captured
-            in_between_x = (x + self.selected_x) / 2
-            in_between_y = (y + self.selected_y) / 2
+            in_between_x = (x + self.selected_x) // 2
+            in_between_y = (y + self.selected_y) // 2
             
             self.gameboard[in_between_x][in_between_y] = None
             self.sheep_left -= 1
@@ -121,10 +152,13 @@ class Game:
             # Sheep in the stable has been eaten
             if is_in_stable(in_between_x, in_between_y):
                 self.sheep_in_stable -= 1
+                
+            print (f"wolf moved to {x},{y}")
+
             
             
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int): 
-        self.gameboard[self.selected_x][self.selected_y()] = None
+        self.gameboard[self.selected_x][self.selected_y] = None
         self.gameboard[x][y] = piece
     
 
@@ -132,7 +166,7 @@ class Game:
     
     
     def is_empty(self, x, y) -> bool:
-        if not self.isOutside(x, y):
+        if not is_outside(x, y):
             return self.gameboard[x][y] == None
         return False
         
