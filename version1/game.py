@@ -159,9 +159,6 @@ class Game:
 
         self.update_state()
 
-    def deselect_piece(self):
-        print('deselect')
-        self.state = TurnState.selecting
 
     def update_state(self):
         # SELECTING
@@ -299,6 +296,8 @@ class Game:
                 if type(piece) is pieces.Sheep:
                     if piece.entanglement_id == self.entanglement_id_to_remove:
                         self.gameboard[x][y].entanglement_id = -1
+
+        self.entanglement_id_to_remove = -1
 
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int):
         self.gameboard[self.selected_x][self.selected_y] = None
