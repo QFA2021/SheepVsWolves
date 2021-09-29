@@ -436,6 +436,7 @@ def on_mouse_press(x, y, button, modifiers):
 @window.event
 def on_close():
     window.close()
+    game.Music.pause()
 
 
 if __name__ == '__main__':

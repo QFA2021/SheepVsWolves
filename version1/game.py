@@ -10,6 +10,9 @@ from pieces import Sheep, Wolf
 import enum
 import pieces
 
+Music = pg.media.Player()
+Music.queue(pg.resource.media('music/noise.wav'))
+
 
 class GameMode(enum.Enum):
     NORMAL = 1
@@ -39,8 +42,6 @@ class TurnState(enum.Enum):
 class Game:
     gameboard = []
     Muted = True
-    Music = pg.media.Player()
-    Music.queue(pg.resource.media('music/noise.wav'))
     def __init__(self, mode):
         self.sheep_in_stable = 0
         self.sheep_left = 20
@@ -337,10 +338,10 @@ class Game:
     
     def mute_music(self):
         if self.Muted:
-            self.Music.play()
+            Music.play()
             self.Muted = False
         else:
-            self.Music.pause()
+            Music.pause()
             self.Muted = True
 
 
