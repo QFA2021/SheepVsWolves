@@ -14,6 +14,7 @@ import abc
 # - mute sound
 # - how to play
 # - stack dead sheep
+# - scale images statically
 
 
 def get_path_fonts(file: str) -> str:
