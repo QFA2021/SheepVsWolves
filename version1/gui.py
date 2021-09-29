@@ -27,6 +27,8 @@ grid_margin = 100
 window_width = 800
 center_margin = window_width / 2 - 3 * grid_margin
 
+icon_size = 80
+
 window = pg.window.Window(window_width, window_width, visible=True)
 
 
@@ -90,14 +92,15 @@ class GameScreen(Screen):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         gb = self.current_game.gameboard
-        print('draw')
+
         # background
         path = pieces.get_path("icons/background.png")
-        pic = image.load(path)
+        pic = pg.image.load(path)
         pic.blit(0, 0)
 
         # draw grid
         batch = pg.graphics.Batch()
+        lines = []
         for row in range(7):
             for column in range(7):
                 for offset_row in range(-1, 2):
@@ -112,10 +115,10 @@ class GameScreen(Screen):
                                                   width=5,
                                                   color=field_color,
                                                   batch=batch)
-                        batch.draw()
+                            lines.append(line)
 
         # draw circles
-        batch = pg.graphics.Batch()
+        circles = []
         for row in range(7):
             for column in range(7):
                 if game.is_outside(column, row): continue
@@ -130,7 +133,7 @@ class GameScreen(Screen):
 
                     circle = pg.shapes.Circle(x, y, field_radius + 5,
                                               color=color, batch=batch)
-                    batch.draw()
+                    circles.append(circle)
 
                 # mark selection
                 color = field_color
@@ -138,18 +141,25 @@ class GameScreen(Screen):
                     color = selected_color
 
                 circle = pg.shapes.Circle(x, y, field_radius, color=color, batch=batch)
-                batch.draw()
+                circles.append(circle)
+
+        batch.draw()
+        batch = pg.graphics.Batch()
 
         # draw sheep and wolfs
+        sprites = []
         for row in range(7):
             for column in range(7):
                 pos = self.ind_to_cord(row, column)
                 entry = gb[row][column]
                 if entry is not None:
-                    pic = image.load(entry.get_image())
-                    pic.anchor_x = pic.width // 2
-                    pic.anchor_y = pic.height // 2
-                    pic.blit(pos[0], pos[1])
+                    image = entry.get_image()
+                    image.anchor_x = image.width // 2
+                    image.anchor_y = image.height // 2
+                    scale_factor = icon_size / image.width
+                    sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
+                    sprite.scale = scale_factor
+                    sprites.append(sprite)
 
                 # marking entanglement
                 if type(entry) is pieces.Sheep:
@@ -160,6 +170,8 @@ class GameScreen(Screen):
                         label = pg.text.Label(str(id), font_size=18, x=x, y=y)
                         label.color = (255, 255, 0, 255)
                         label.draw()
+
+        batch.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == mouse.LEFT:
