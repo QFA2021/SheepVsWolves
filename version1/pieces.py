@@ -1,6 +1,7 @@
 import abc
 import pathlib
 import game
+import pyglet
 
 
 class Piece(abc.ABC):
@@ -16,14 +17,17 @@ def get_path(file:  str) -> str:
     if not path.__contains__("version1"):
         path += "/version1"
     return f"{path}/{file}"
-        
+
+
 class Sheep(Piece):
 
     def __init__(self):
         self.entanglement_id = -1
+        path = get_path("icons/cute_sheep.jpg")
+        self.image = pyglet.image.load(path)
 
     def get_image(self):
-        return get_path("icons/cute_sheep_transparent.png")
+        return self.image
     
     def is_move_valid(self, gameboard, x_from: int, y_from: int, x_to: int, y_to: int) -> bool:
         # check sheep going down
@@ -50,8 +54,12 @@ def is_capture_move(x_from :int, y_from :int, x_to :int, y_to :int) -> bool:
 
 
 class Wolf(Piece):
+    def __init__(self):
+        path = get_path("icons/org_wolf.jpg")
+        self.image = pyglet.image.load(path)
+
     def get_image(self):
-        return get_path("icons/wolf_transparent.png")
+        return self.image
             
     def is_move_valid(self, gameboard, x_from :int, y_from :int, x_to :int, y_to :int) -> bool:
         if not is_capture_move(x_from, y_from, x_to, y_to):
