@@ -139,7 +139,18 @@ class GameScreen(Screen):
 
                 circle = pg.shapes.Circle(x, y, field_radius, color=color, batch=batch)
                 batch.draw()
-
+        #sheep left counter
+        count_str = str(self.current_game.sheep_left)
+        sheep_counter = pg.text.Label(count_str,
+                          font_name='Times New Roman',
+                          font_size=36,
+                          x=5 * grid_margin + center_margin, y=0.5* grid_margin + center_margin)
+        pos = self.ind_to_cord(5, 5)
+        pic = image.load(pieces.get_path("icons/cute_sheep_transparent.png"))
+        pic.anchor_x = pic.width // 2
+        pic.anchor_y = pic.height // 2
+        pic.blit(pos[0], pos[1])
+        sheep_counter.draw()
         # draw sheep and wolfs
         for row in range(7):
             for column in range(7):
@@ -150,7 +161,6 @@ class GameScreen(Screen):
                     pic.anchor_x = pic.width // 2
                     pic.anchor_y = pic.height // 2
                     pic.blit(pos[0], pos[1])
-
                 # marking entanglement
                 if type(entry) is pieces.Sheep:
                     if entry.entanglement_id != -1:
