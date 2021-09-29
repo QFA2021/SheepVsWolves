@@ -38,7 +38,10 @@ class TurnState(enum.Enum):
 
 class Game:
     gameboard = []
-
+    Muted = False
+    Music = pg.media.Player()
+    Music.queue(pg.resource.media('music/noise.wav'))
+    Music.play()
     def __init__(self, mode):
         self.sheep_in_stable = 0
         self.sheep_left = 20
@@ -273,9 +276,9 @@ class Game:
         sheep = self.gameboard[x][y]
         self.gameboard[x][y] = None
         self.sheep_left -= 1
-        print('wolve eats')
-        sound = pg.resource.media('music/wolf3.wav', streaming=False)
-        sound.play()
+        if not self.Muted:
+            sound = pg.resource.media('music/wolf3.wav', streaming=False)
+            sound.play()
 
         # deal with entanglement
         id = sheep.entanglement_id
@@ -318,9 +321,10 @@ class Game:
         self.gameboard[self.selected_x][self.selected_y] = None
         self.gameboard[x][y] = piece
         if type(piece) == pieces.Sheep:
-            print('mäh')
-            sound = pg.resource.media('music/sheep.mp3', streaming=False)
-            sound.play()
+            if not self.Muted:
+                print('mäh')
+                sound = pg.resource.media('music/sheep.mp3', streaming=False)
+                sound.play()
 
     def is_empty(self, x, y) -> bool:
         if not is_outside(x, y):
@@ -331,6 +335,14 @@ class Game:
         if self.mode == GameMode.NORMAL:
             return False
         return x == 3 and y == 3
+    
+    def mute_music(self):
+        if self.Muted:
+            self.Music.play()
+            self.Muted = False
+        else:
+            self.Music.pause()
+            self.Muted = True
 
 
 def is_in_stable(x: int, y: int) -> bool:
