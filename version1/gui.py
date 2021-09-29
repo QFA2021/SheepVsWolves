@@ -11,8 +11,11 @@ import abc
 
 
 # TODOS:
-# - double jump
-#   - superposition
+# - mute sound
+# - how to play
+# - highlight info text in gamescreen
+# - stack dead sheep
+
 
 def get_path_fonts(file: str) -> str:
     path = str(pathlib.Path().resolve())
