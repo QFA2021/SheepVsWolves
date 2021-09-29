@@ -11,10 +11,11 @@ import abc
 
 
 # TODOS:
-# - double jump
-# - signal that game is over (restart)
-# - quantum mechanics
-#   - superposition
+# - mute sound
+# - how to play
+# - highlight info text in gamescreen
+# - stack dead sheep
+
 
 Music = pg.media.Player()
 Music.queue(pg.resource.media('music/noise.wav'))
