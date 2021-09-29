@@ -169,13 +169,13 @@ class GameScreen(Screen):
                         label.color = (255, 255, 0, 255)
                         label.draw()
         #sheep left counter
-            count_str = str(self.current_game.sheep_left)
+            count_str = str(self.current_game.sheep_left)+str('x')
             sheep_counter = pg.text.Label(count_str,
                             font_name='Times New Roman',
-                            font_size=40,
-                            x=5 * grid_margin + center_margin, y=0.5* grid_margin + center_margin)
+                            font_size=36,
+                            x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
             image = pg.image.load(pieces.get_path("icons/cute_sheep.jpg"))
-            pos = self.ind_to_cord(5, 5)
+            pos = self.ind_to_cord(5.4, 6.0)
             pic.anchor_x = pic.width // 2
             pic.anchor_y = pic.height // 2
             scale_factor = icon_size / image.width
