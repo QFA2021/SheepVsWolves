@@ -273,6 +273,9 @@ class Game:
         sheep = self.gameboard[x][y]
         self.gameboard[x][y] = None
         self.sheep_left -= 1
+        print('wolve eats')
+        sound = pg.resource.media('music/wolf3.wav', streaming=False)
+        sound.play()
 
         # deal with entanglement
         id = sheep.entanglement_id
