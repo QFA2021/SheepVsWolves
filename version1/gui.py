@@ -126,6 +126,7 @@ class GameScreen(Screen):
         self.draw_grid()
         self.draw_circles()
         self.draw_pieces()
+        self.draw_info()
 
         batch = pg.graphics.Batch()
         #sheep left counter
@@ -149,6 +150,16 @@ class GameScreen(Screen):
         sprite.scale = scale_factor
         batch.draw()
 
+
+
+
+    def draw_info(self):
+        info = self.current_game.info
+        label = pg.text.Label(info,
+                              font_name='Times New Roman',
+                              font_size=20,
+                              x=130, y=window_width-50)
+        label.draw()
 
     def draw_grid(self):
         batch = pg.graphics.Batch()
