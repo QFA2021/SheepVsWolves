@@ -23,7 +23,7 @@ class Sheep(Piece):
 
     def __init__(self):
         self.entanglement_id = -1
-        path = get_path("icons/cute_sheep.jpg")
+        path = get_path("icons/sheep.png")
         self.image = pyglet.image.load(path)
 
     def get_image(self):
@@ -55,7 +55,7 @@ def is_capture_move(x_from :int, y_from :int, x_to :int, y_to :int) -> bool:
 
 class Wolf(Piece):
     def __init__(self):
-        path = get_path("icons/org_wolf.jpg")
+        path = get_path("icons/wolf.png")
         self.image = pyglet.image.load(path)
 
     def get_image(self):
