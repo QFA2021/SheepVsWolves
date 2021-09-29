@@ -208,7 +208,7 @@ class Game:
             self.selected_y = -1
 
     def check_win(self):
-        if self.sheep_in_stable >= 9:
+        if self.sheep_in_stable >= 8:
             self.state = TurnState.OVER
             print("Sheep won!")
             return 1
