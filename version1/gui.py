@@ -12,8 +12,6 @@ import abc
 
 # TODOS:
 # - double jump
-# - signal that game is over (restart)
-# - quantum mechanics
 #   - superposition
 
 def get_path_fonts(file: str) -> str:
