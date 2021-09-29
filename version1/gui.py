@@ -139,6 +139,7 @@ class GameScreen(Screen):
         self.draw_circles()
         self.draw_pieces()
         self.draw_info()
+        self.draw_turn_indicator()
 
         batch = pg.graphics.Batch()
         #sheep left counter
@@ -179,6 +180,26 @@ class GameScreen(Screen):
                               font_size=20,
                               x=130, y=window_width-50)
         label.draw()
+
+    def draw_turn_indicator(self):
+        size = 400
+        alpha = 0
+
+        sheep = pieces.default_sheep_image
+        sprite = pg.sprite.Sprite(sheep, x=50, y=100)
+        sprite.scale = size / sheep.width
+        sprite.rotation = 20
+        if not self.current_game.sheeps_turn:
+            sprite.opacity = alpha
+        sprite.draw()
+
+        wolf = pieces.default_wolf_image
+        sprite = pg.sprite.Sprite(wolf, x=50, y=100)
+        sprite.scale = (size / wolf.width) * 0.8
+        sprite.rotation = 20
+        if self.current_game.sheeps_turn:
+            sprite.opacity = alpha
+        sprite.draw()
 
     def draw_grid(self):
         batch = pg.graphics.Batch()
