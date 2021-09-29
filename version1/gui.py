@@ -20,12 +20,12 @@ import abc
 
 def get_path_fonts(file:  str) -> str:
     path = str(pathlib.Path().resolve())
-    if not path.__contains__("fonts"):
-        path += "/fonts"
+    if not path.__contains__("version1"):
+        path += "/version1"
     return f"{path}/{file}"
 
 
-font_path = get_path_fonts("Quantum.otf")
+font_path = get_path_fonts("fonts/Quantum.otf")
 font.add_file(font_path)
 q_font = font.load('Quantum', 25)
 
