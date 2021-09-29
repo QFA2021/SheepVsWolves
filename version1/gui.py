@@ -4,8 +4,21 @@ from pyglet.window import mouse
 from pyglet import image
 from pyglet.gl import *
 import pathlib
-
 import pieces
+from pyglet import font
+
+
+def get_path_fonts(file:  str) -> str:
+    path = str(pathlib.Path().resolve())
+    if not path.__contains__("fonts"):
+        path += "/fonts"
+    return f"{path}/{file}"
+
+
+font_path = get_path_fonts("Quantum.otf")
+font.add_file(font_path)
+q_font = font.load('Quantum', 25)
+
 
 window_width = 800
 grid_margin = 100
@@ -14,7 +27,8 @@ field_color = (255, 0, 24)
 selected_color = (24, 0, 255)
 teleportation_active_color = (201, 13, 155)
 teleportation_inactive_color = (30, 0, 30)
-
+blue = (0,0,255)
+red = (25,25,50)
 grid_margin = 100
 window_width = 800
 center_margin = window_width/2 - 3*grid_margin
@@ -32,29 +46,29 @@ current_game = game.Game(game.GameMode.NORMAL)
 @intro.event
 def on_draw():
     intro.clear()
-    menu = pg.text.Label("MENU", font_name = 'Times New Roman', font_size = 50, x = intro.width//2, y = intro.height,
+    menu = pg.text.Label("Wolves vs. Sheep", font_name = 'Quantum', font_size = 56, x = intro.width//2, y = intro.height,
                          anchor_x = 'center', anchor_y = 'top')
     menu.draw()
     #start game
     start_rectangle = pg.shapes.BorderedRectangle(intro.width//2,intro.height//2,
                                                   intro.width//2, intro.height//4,
-                                                  border = 20, color = (255, 0, 24), border_color = (0,0,255))
+                                                  border = 20, color = red, border_color = blue)
     start_rectangle.anchor_position = (intro.width//4, 0)
     start_rectangle.opacity = 160
     start_rectangle.draw()
-    start_text = pg.text.Label("Start Game", font_name = 'Times New Roman', font_size = 30,
+    start_text = pg.text.Label("Start Game", font_name = 'Quantum', font_size = 22,
                                x = intro.width//2, y = intro.height//2 + 15*intro.height//100,
                                anchor_x = 'center', anchor_y = 'top')
     start_text.draw()
     #start quantum game
-    q_start_rectangle = pg.shapes.BorderedRectangle(intro.width//2,intro.height//4,
+    q_start_rectangle = pg.shapes.BorderedRectangle(intro.width//2,intro.height//4-intro.width//12,
                                                   intro.width//2, intro.height//4,
-                                                  border = 20, color = (255, 0, 24), border_color = (0,0,255))
+                                                  border = 20, color = red, border_color = blue)
     q_start_rectangle.anchor_position = (intro.width//4, 0)
     q_start_rectangle.opacity = 160
     q_start_rectangle.draw()
-    q_start_text = pg.text.Label("Start Quantum Game", font_name = 'Times New Roman', font_size = 30,
-                               x = intro.width//2, y = intro.height//4 + 15*intro.height//100,
+    q_start_text = pg.text.Label("Start Quantum Game", font_name = 'Quantum', font_size = 22,
+                               x = intro.width//2, y = intro.height//4 + 15*intro.height//100-intro.width//12,
                                anchor_x = 'center', anchor_y = 'top')
     q_start_text.draw()
     
