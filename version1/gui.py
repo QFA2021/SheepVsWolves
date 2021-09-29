@@ -67,6 +67,7 @@ class MenuScreen(Screen):
         menu = pg.text.Label("Wolves vs. Sheep", font_name = 'Quantum', font_size = 56, x = window.width//2, y = window.height-window.height//16,
                              anchor_x = 'center', anchor_y = 'top')
         menu.draw()
+
         #start game
         start_rectangle = pg.shapes.BorderedRectangle(window.width//2,window.height//2,
                                                       window.width//2, window.height//4,
@@ -78,6 +79,7 @@ class MenuScreen(Screen):
                                    x = window.width//2, y = window.height//2 + 15*window.height//100,
                                    anchor_x = 'center', anchor_y = 'top')
         start_text.draw()
+
         #start quantum game
         q_start_rectangle = pg.shapes.BorderedRectangle(window.width//2,window.height//4-window.width//12,
                                                       window.width//2, window.height//4,
@@ -89,6 +91,7 @@ class MenuScreen(Screen):
                                    x = window.width//2, y = window.height//4 + 15*window.height//100-window.width//12,
                                    anchor_x = 'center', anchor_y = 'top')
         q_start_text.draw()
+
     
     def on_mouse_press(self, x, y, button, modifiers):
         # Top Button
@@ -101,8 +104,12 @@ class MenuScreen(Screen):
 
 # GAME_SCREEN
 class GameScreen(Screen):
+
     def __init__(self):
         self.current_game = None
+        self.back_size = 60
+        margin = 30
+        self.back_pos = (margin, window_width - margin - self.back_size)
 
     def on_draw(self):
         window.clear()
@@ -116,7 +123,45 @@ class GameScreen(Screen):
         pic = pg.image.load(path)
         pic.blit(0, 0)
 
-        # draw grid
+        self.draw_grid()
+        self.draw_circles()
+        self.draw_pieces()
+        self.draw_info()
+
+        batch = pg.graphics.Batch()
+        #sheep left counter
+        count_str = str(self.current_game.sheep_left)+str('x')
+        sheep_counter = pg.text.Label(count_str,
+                        font_name='Times New Roman',
+                        font_size=36,
+                        x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
+        image = pg.image.load(pieces.get_path("icons/sheep.png"))
+        pos = self.ind_to_cord(5.4, 6.0)
+        scale_factor = icon_size_sheep / image.width
+        sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
+        sprite.scale = scale_factor
+        sheep_counter.draw()
+        batch.draw()
+
+        # back button
+        image = pg.image.load(pieces.get_path("icons/arrow_left.png"))
+        scale_factor = self.back_size / image.width
+        sprite = pg.sprite.Sprite(image, self.back_pos[0], self.back_pos[1], batch=batch)
+        sprite.scale = scale_factor
+        batch.draw()
+
+
+
+
+    def draw_info(self):
+        info = self.current_game.info
+        label = pg.text.Label(info,
+                              font_name='Times New Roman',
+                              font_size=20,
+                              x=130, y=window_width-50)
+        label.draw()
+
+    def draw_grid(self):
         batch = pg.graphics.Batch()
         lines = []
         for row in range(7):
@@ -134,9 +179,12 @@ class GameScreen(Screen):
                                                   color=field_color,
                                                   batch=batch)
                             lines.append(line)
+        batch.draw()
 
-        # draw circles
+    def draw_circles(self):
+        batch = pg.graphics.Batch()
         circles = []
+
         for row in range(7):
             for column in range(7):
                 if game.is_outside(column, row): continue
@@ -162,9 +210,12 @@ class GameScreen(Screen):
                 circles.append(circle)
 
         batch.draw()
+
+    def draw_pieces(self):
         batch = pg.graphics.Batch()
-        # draw sheep and wolfs
         sprites = []
+        gb = self.current_game.gameboard
+
         for row in range(7):
             for column in range(7):
                 pos = self.ind_to_cord(row, column)
@@ -173,13 +224,13 @@ class GameScreen(Screen):
                     image = entry.get_image()
                     image.anchor_x = image.width // 2
                     image.anchor_y = image.height // 2
-                    icon_size = 61
+                    icon_size = 62
                     offset = 3
-                    if type(entry)==pieces.Sheep:
+                    if type(entry) == pieces.Sheep:
                         icon_size = 80
                         offset = 0
                     scale_factor = icon_size / image.width
-                    sprite = pg.sprite.Sprite(image, pos[0], pos[1]-offset, batch=batch)
+                    sprite = pg.sprite.Sprite(image, pos[0], pos[1] - offset, batch=batch)
                     sprite.scale = scale_factor
                     sprites.append(sprite)
                 # marking entanglement
@@ -200,8 +251,8 @@ class GameScreen(Screen):
                         x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
         image = pg.image.load(pieces.get_path("icons/sheep.png"))
         pos = self.ind_to_cord(5.4, 6.0)
-        pic.anchor_x = pic.width // 2
-        pic.anchor_y = pic.height // 2
+        image.anchor_x = image.width // 2
+        image.anchor_y = image.height // 2
         scale_factor = icon_size / image.width
         sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
         sprite.scale = scale_factor
@@ -230,6 +281,11 @@ class GameScreen(Screen):
             if self.current_game.is_clickable(indices_leftclick[0], indices_leftclick[1]):
                 self.current_game.click_action(indices_leftclick[0], indices_leftclick[1])
 
+            # Back Button
+            if self.back_pos[0] <= x <= self.back_pos[0] + self.back_size \
+                    and self.back_pos[1] <= y <= self.back_pos[1] + self.back_size:
+                to_menu_screen()
+
     def get_indices(self, x, y):
         (i, j) = (-1, -1)
         x = x - center_margin
@@ -247,14 +303,18 @@ class GameScreen(Screen):
         (i, j) = (i, 6 - j)
         return (center_margin + i * grid_margin, center_margin + j * grid_margin)
 
-
-screen = MenuScreen()
+menu_screen= MenuScreen()
+screen = menu_screen
 
 def to_game_screen(mode: game.GameMode):
     global screen
     game_screen = GameScreen()
     game_screen.current_game = game.Game(mode)
     screen = game_screen
+
+def to_menu_screen():
+    global screen
+    screen = menu_screen
 
 @window.event
 def on_draw():
