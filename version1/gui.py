@@ -173,7 +173,7 @@ class GameScreen(Screen):
                     image = entry.get_image()
                     image.anchor_x = image.width // 2
                     image.anchor_y = image.height // 2
-                    icon_size = 61
+                    icon_size = 62
                     offset = 3
                     if type(entry)==pieces.Sheep:
                         icon_size = 80
