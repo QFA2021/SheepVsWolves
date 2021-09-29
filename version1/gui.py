@@ -17,7 +17,7 @@ import abc
 #   - superposition
 
 Music = pg.media.Player()
-Music.queue(pg.resource.media('music/bensound.mp3'))
+Music.queue(pg.resource.media('music/noise.wav'))
 Music.play()
 
 def get_path_fonts(file: str) -> str:
