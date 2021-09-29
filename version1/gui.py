@@ -44,7 +44,8 @@ grid_margin = 100
 window_width = 800
 center_margin = window_width / 2 - 3 * grid_margin
 
-icon_size = 80
+icon_size_sheep = 80
+icon_size_wolf = 70
 
 window = pg.window.Window(window_width, window_width, visible=True)
 
@@ -63,7 +64,7 @@ class Screen(abc.ABC):
 class MenuScreen(Screen):
     def on_draw(self):
         window.clear()
-        menu = pg.text.Label("Wolves vs. Sheep", font_name = 'Quantum', font_size = 56, x = window.width//2, y = window.height,
+        menu = pg.text.Label("Wolves vs. Sheep", font_name = 'Quantum', font_size = 56, x = window.width//2, y = window.height-window.height//16,
                              anchor_x = 'center', anchor_y = 'top')
         menu.draw()
         #start game
@@ -111,7 +112,7 @@ class GameScreen(Screen):
         gb = self.current_game.gameboard
 
         # background
-        path = pieces.get_path("icons/background.png")
+        path = pieces.get_path("icons/background3.jpg")
         pic = pg.image.load(path)
         pic.blit(0, 0)
 
@@ -172,8 +173,13 @@ class GameScreen(Screen):
                     image = entry.get_image()
                     image.anchor_x = image.width // 2
                     image.anchor_y = image.height // 2
+                    icon_size = 61
+                    offset = 3
+                    if type(entry)==pieces.Sheep:
+                        icon_size = 80
+                        offset = 0
                     scale_factor = icon_size / image.width
-                    sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
+                    sprite = pg.sprite.Sprite(image, pos[0], pos[1]-offset, batch=batch)
                     sprite.scale = scale_factor
                     sprites.append(sprite)
                 # marking entanglement
@@ -185,21 +191,22 @@ class GameScreen(Screen):
                         label = pg.text.Label(str(id), font_size=18, x=x, y=y)
                         label.color = (255, 255, 0, 255)
                         label.draw()
+        batch.draw()
         #sheep left counter
-            count_str = str(self.current_game.sheep_left)+str('x')
-            sheep_counter = pg.text.Label(count_str,
-                            font_name='Times New Roman',
-                            font_size=36,
-                            x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
-            image = pg.image.load(pieces.get_path("icons/sheep.png"))
-            pos = self.ind_to_cord(5.4, 6.0)
-            pic.anchor_x = pic.width // 2
-            pic.anchor_y = pic.height // 2
-            scale_factor = icon_size / image.width
-            sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
-            sprite.scale = scale_factor
-            sprites.append(sprite)
-            sheep_counter.draw()
+        count_str = str(self.current_game.sheep_left)+str('x')
+        sheep_counter = pg.text.Label(count_str,
+                        font_name='Times New Roman',
+                        font_size=36,
+                        x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
+        image = pg.image.load(pieces.get_path("icons/sheep.png"))
+        pos = self.ind_to_cord(5.4, 6.0)
+        pic.anchor_x = pic.width // 2
+        pic.anchor_y = pic.height // 2
+        scale_factor = icon_size / image.width
+        sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
+        sprite.scale = scale_factor
+        sprites.append(sprite)
+        sheep_counter.draw()
         batch.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
