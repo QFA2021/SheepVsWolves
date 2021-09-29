@@ -57,6 +57,8 @@ class Game:
 
         self.entanglement_id_to_remove = -1
 
+        self.info = ""
+
         self.init_gameboard()
 
     def init_gameboard(self):
@@ -70,6 +72,7 @@ class Game:
                     s = Sheep()
                     sheep.append(s)
                     self.gameboard[x][y] = s
+
 
         # add wolfs
         self.gameboard[2][4] = Wolf()
@@ -161,6 +164,8 @@ class Game:
 
 
     def update_state(self):
+        info = ""
+
         # SELECTING
         if self.state == TurnState.SELECTING:
             self.state = TurnState.MOVING
@@ -172,9 +177,11 @@ class Game:
             if self.teleportation_just_activated:
                 self.teleportation_just_activated = False
                 self.state = TurnState.SELECTING_TP_PARTNER
+                info = "Select a sheep you want to swap with"
 
             elif self.entanglement_id_to_remove != -1:
                 self.state = TurnState.PLACE_IN_STABLE
+                info = "Choose where in the stable to place the entangled sheep"
 
             else:
                 self.sheeps_turn = not self.sheeps_turn
@@ -191,6 +198,7 @@ class Game:
             self.state = TurnState.SELECTING
             self.sheeps_turn = False
 
+        self.info = info
         self.check_win()
         self.manage_selection()
 

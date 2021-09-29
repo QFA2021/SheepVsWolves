@@ -18,13 +18,17 @@ def get_path(file:  str) -> str:
         path += "/version1"
     return f"{path}/{file}"
 
+path = get_path("icons/sheep.png")
+default_sheep_image = pyglet.image.load(path)
+path = get_path("icons/wolf.png")
+default_wolf_image = pyglet.image.load(path)
+
 
 class Sheep(Piece):
 
     def __init__(self):
         self.entanglement_id = -1
-        path = get_path("icons/sheep.png")
-        self.image = pyglet.image.load(path)
+        self.image = default_sheep_image
 
     def get_image(self):
         return self.image
@@ -55,8 +59,7 @@ def is_capture_move(x_from :int, y_from :int, x_to :int, y_to :int) -> bool:
 
 class Wolf(Piece):
     def __init__(self):
-        path = get_path("icons/wolf.png")
-        self.image = pyglet.image.load(path)
+        self.image = default_wolf_image
 
     def get_image(self):
         return self.image
