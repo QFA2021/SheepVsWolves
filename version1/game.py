@@ -323,7 +323,7 @@ class Game:
         if type(piece) == pieces.Sheep:
             if not self.Muted:
                 print('mäh')
-                sound = pg.resource.media('music/sheep.mp3', streaming=False)
+                sound = pg.resource.media('music/sheep.wav', streaming=False)
                 sound.play()
 
     def is_empty(self, x, y) -> bool:

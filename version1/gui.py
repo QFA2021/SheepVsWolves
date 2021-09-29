@@ -13,7 +13,6 @@ import abc
 # TODOS:
 # - mute sound
 # - how to play
-# - highlight info text in gamescreen
 # - stack dead sheep
 
 
@@ -210,10 +209,25 @@ class GameScreen(Screen):
 
     def draw_info(self):
         info = self.current_game.info
+        if info == "": return
+
+        x = 130
+        y = window_width - 50
+        width = 420
+
+        # Info for entanglement
+        if len(info) > 40:
+            width = 615
+
+        rect = pg.shapes.Rectangle(x, y - 18, width=width, height=44)
+        rect.color = (0, 0, 20)
+        rect.opacity = 200
+        rect.draw()
+
         label = pg.text.Label(info,
                               font_name='Times New Roman',
                               font_size=20,
-                              x=130, y=window_width - 50)
+                              x=x+10, y=y)
         label.draw()
 
     def draw_turn_indicator(self):
