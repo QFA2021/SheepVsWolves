@@ -17,6 +17,9 @@ import abc
 # - quantum mechanics
 #   - superposition
 
+Music = pg.media.Player()
+Music.queue(pg.resource.media('music/bensound.mp3'))
+Music.play()
 
 def get_path_fonts(file:  str) -> str:
     path = str(pathlib.Path().resolve())
@@ -104,7 +107,6 @@ class MenuScreen(Screen):
 
 # GAME_SCREEN
 class GameScreen(Screen):
-
     def __init__(self):
         self.current_game = None
         self.back_size = 60
@@ -157,6 +159,13 @@ class GameScreen(Screen):
         image = pg.image.load(pieces.get_path("icons/arrow_left.png"))
         scale_factor = self.back_size / image.width
         sprite = pg.sprite.Sprite(image, self.back_pos[0], self.back_pos[1], batch=batch)
+        sprite.scale = scale_factor
+        batch.draw()
+
+        # mute button
+        image = pg.image.load(pieces.get_path("icons/mute.jpeg"))
+        scale_factor = self.back_size / image.width
+        sprite = pg.sprite.Sprite(image, self.back_pos[0], self.back_pos[1]-50, batch=batch)
         sprite.scale = scale_factor
         batch.draw()
 
@@ -281,7 +290,7 @@ class GameScreen(Screen):
                         x=25, y=4*window_width/5, color=(255,200,0,255))
         if not winner_sheep == 0:
             winner.draw()
-
+    Muted=False
     def on_mouse_press(self, x, y, button, modifiers):
         if button == mouse.LEFT:
             global indices_leftclick
@@ -294,6 +303,16 @@ class GameScreen(Screen):
             if self.back_pos[0] <= x <= self.back_pos[0] + self.back_size \
                     and self.back_pos[1] <= y <= self.back_pos[1] + self.back_size:
                 to_menu_screen()
+            # Mute Button
+            if self.back_pos[0] <= x <= self.back_pos[0] + self.back_size \
+                    and self.back_pos[1]-50 <= y <= self.back_pos[1] + self.back_size -50:
+                print(self.Muted)
+                if self.Muted:
+                    Music.play()
+                    self.Muted = False
+                else:
+                    Music.pause()
+                    self.Muted = True
 
     def get_indices(self, x, y):
         (i, j) = (-1, -1)
