@@ -17,10 +17,6 @@ import abc
 # - stack dead sheep
 
 
-Music = pg.media.Player()
-Music.queue(pg.resource.media('music/noise.wav'))
-Music.play()
-
 def get_path_fonts(file: str) -> str:
     path = str(pathlib.Path().resolve())
     if not path.__contains__("version1"):
@@ -351,7 +347,6 @@ class GameScreen(Screen):
                         x=25, y=4*window_width/5, color=(255,200,0,255))
         if not winner_sheep == 0:
             winner.draw()
-    Muted=False
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == mouse.LEFT:
@@ -360,7 +355,6 @@ class GameScreen(Screen):
             print(indices_leftclick)
             if self.current_game.is_clickable(indices_leftclick[0], indices_leftclick[1]):
                 self.current_game.click_action(indices_leftclick[0], indices_leftclick[1])
-
             # Back Button
             if self.back_pos[0] <= x <= self.back_pos[0] + self.back_size \
                     and self.back_pos[1] <= y <= self.back_pos[1] + self.back_size:
@@ -368,13 +362,7 @@ class GameScreen(Screen):
             # Mute Button
             if self.back_pos[0] <= x <= self.back_pos[0] + self.back_size \
                     and self.back_pos[1]-50 <= y <= self.back_pos[1] + self.back_size -50:
-                print(self.Muted)
-                if self.Muted:
-                    Music.play()
-                    self.Muted = False
-                else:
-                    Music.pause()
-                    self.Muted = True
+                self.current_game.mute_music()
 
             # Restart Button
             if self.restart_active:
