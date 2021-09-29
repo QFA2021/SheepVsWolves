@@ -160,9 +160,12 @@ class GameScreen(Screen):
         batch.draw()
 
         # mute button
-        image = pg.image.load(pieces.get_path("icons/mute.jpeg"))
-        scale_factor = self.back_size / image.width
-        sprite = pg.sprite.Sprite(image, self.back_pos[0], self.back_pos[1]-50, batch=batch)
+        imstr = "icons/volume_up.jpg"
+        if self.current_game.Muted:
+            imstr = "icons/volume_off.jpg"
+        image = pg.image.load(pieces.get_path(imstr))
+        scale_factor = 0.8* self.back_size / image.width
+        sprite = pg.sprite.Sprite(image, self.back_pos[0]+6, self.back_pos[1]-60, batch=batch)
         sprite.scale = scale_factor
         batch.draw()
 

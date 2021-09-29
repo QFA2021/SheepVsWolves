@@ -38,10 +38,9 @@ class TurnState(enum.Enum):
 
 class Game:
     gameboard = []
-    Muted = False
+    Muted = True
     Music = pg.media.Player()
     Music.queue(pg.resource.media('music/noise.wav'))
-    Music.play()
     def __init__(self, mode):
         self.sheep_in_stable = 0
         self.sheep_left = 20
