@@ -258,7 +258,6 @@ class GameScreen(Screen):
         sprite.scale = scale_factor
         sprites.append(sprite)
         sheep_counter.draw()
-        batch.draw()
         #winner
         winner_sheep=self.current_game.check_win()
         winstring = 'huhu lulu'
@@ -269,7 +268,7 @@ class GameScreen(Screen):
         winner = pg.text.Label(winstring,
                         font_name='Quantum',
                         font_size=100,
-                        x=30, y=4*window_width/5, color=(255,200,0,255))
+                        x=25, y=4*window_width/5, color=(255,200,0,255))
         if not winner_sheep == 0:
             winner.draw()
 
