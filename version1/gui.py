@@ -359,7 +359,6 @@ class GameScreen(Screen):
             print(indices_leftclick)
             if self.current_game.is_clickable(indices_leftclick[0], indices_leftclick[1]):
                 self.current_game.click_action(indices_leftclick[0], indices_leftclick[1])
-
             # Back Button
             if self.back_pos[0] <= x <= self.back_pos[0] + self.back_size \
                     and self.back_pos[1] <= y <= self.back_pos[1] + self.back_size:

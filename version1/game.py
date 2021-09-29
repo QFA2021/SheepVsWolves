@@ -4,6 +4,7 @@ Created on Thu Sep 23 09:16:36 2021
 
 @author: Elias, Jan, Martin
 """
+import pyglet as pg
 import random
 from pieces import Sheep, Wolf
 import enum
@@ -313,6 +314,10 @@ class Game:
     def move_piece_simple(self, piece: pieces.Piece, x: int, y: int):
         self.gameboard[self.selected_x][self.selected_y] = None
         self.gameboard[x][y] = piece
+        if type(piece) == pieces.Sheep:
+            print('mäh')
+            sound = pg.resource.media('music/sheep.mp3', streaming=False)
+            sound.play()
 
     def is_empty(self, x, y) -> bool:
         if not is_outside(x, y):
