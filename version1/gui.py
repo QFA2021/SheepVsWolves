@@ -136,6 +136,7 @@ class GameScreen(Screen):
         self.draw_grid()
         self.draw_circles()
         self.draw_pieces()
+        self.draw_info()
 
         batch = pg.graphics.Batch()
         #sheep left counter
@@ -159,6 +160,16 @@ class GameScreen(Screen):
         sprite.scale = scale_factor
         batch.draw()
 
+
+
+
+    def draw_info(self):
+        info = self.current_game.info
+        label = pg.text.Label(info,
+                              font_name='Times New Roman',
+                              font_size=20,
+                              x=130, y=window_width-50)
+        label.draw()
 
     def draw_grid(self):
         batch = pg.graphics.Batch()
@@ -242,6 +253,34 @@ class GameScreen(Screen):
                         label.color = (255, 255, 0, 255)
                         label.draw()
         batch.draw()
+        #sheep left counter
+        count_str = str(self.current_game.sheep_left)+str('x')
+        sheep_counter = pg.text.Label(count_str,
+                        font_name='Times New Roman',
+                        font_size=36,
+                        x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
+        image = pg.image.load(pieces.get_path("icons/sheep.png"))
+        pos = self.ind_to_cord(5.4, 6.0)
+        image.anchor_x = image.width // 2
+        image.anchor_y = image.height // 2
+        scale_factor = icon_size / image.width
+        sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
+        sprite.scale = scale_factor
+        sprites.append(sprite)
+        sheep_counter.draw()
+        #winner
+        winner_sheep=self.current_game.check_win()
+        winstring = 'huhu lulu'
+        if winner_sheep == 2:
+            winstring = 'Wolve won!'
+        if winner_sheep == 1:
+            winstring = "Sheep won!"
+        winner = pg.text.Label(winstring,
+                        font_name='Quantum',
+                        font_size=100,
+                        x=25, y=4*window_width/5, color=(255,200,0,255))
+        if not winner_sheep == 0:
+            winner.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == mouse.LEFT:
