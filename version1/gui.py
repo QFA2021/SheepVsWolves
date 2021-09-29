@@ -34,7 +34,7 @@ q_font = font.load('Quantum', 25)
 window_width = 800
 grid_margin = 100
 field_radius = 30
-field_color = (255, 10, 120)
+field_color = (200, 0, 50, 50)
 selected_color = (24, 0, 255)
 teleportation_active_color = (201, 13, 155)
 teleportation_inactive_color = (30, 0, 30)
@@ -117,11 +117,21 @@ class GameScreen(Screen):
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA)
 
         gb = self.current_game.gameboard
-
+        
+        # sky
+        s_path = pieces.get_path("icons/sky.jpg")
+        s_pic = pg.image.load(s_path)
+        s_scale_factor = window_width / s_pic.width
+        s_sprite = pg.sprite.Sprite(s_pic, 0, window_width//2)
+        s_sprite.scale = s_scale_factor
+        s_sprite.draw()
         # background
-        path = pieces.get_path("icons/background3.jpg")
+        path = pieces.get_path("icons/background4.jpg")
         pic = pg.image.load(path)
-        pic.blit(0, 0)
+        b_scale_factor = 1.06 * window_width / pic.width
+        b_sprite = pg.sprite.Sprite(pic, 0, 0)
+        b_sprite.scale = b_scale_factor
+        b_sprite.draw()
 
         self.draw_grid()
         self.draw_circles()
