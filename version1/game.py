@@ -200,13 +200,16 @@ class Game:
             self.selected_y = -1
 
     def check_win(self):
-        if self.sheep_in_stable >= 9:
+        if self.sheep_in_stable >= 1:
             self.state = TurnState.OVER
             print("Sheep won!")
+            return 1
 
         if self.sheep_left < 9:
             self.state = TurnState.OVER
             print("Wolf won!")
+            return 2
+        return 0
 
     def swap(self, x1, y1, x2, y2):
         temp = self.gameboard[x1][y1]
