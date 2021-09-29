@@ -188,9 +188,9 @@ class GameScreen(Screen):
         #sheep left counter
             count_str = str(self.current_game.sheep_left)+str('x')
             sheep_counter = pg.text.Label(count_str,
-                            font_name='Times New Roman',
+                            font_name='Quantum',
                             font_size=36,
-                            x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
+                            x=4.6 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
             image = pg.image.load(pieces.get_path("icons/sheep.png"))
             pos = self.ind_to_cord(5.4, 6.0)
             pic.anchor_x = pic.width // 2
