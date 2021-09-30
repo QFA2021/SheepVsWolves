@@ -1,6 +1,9 @@
-# JEM_Game
-This is a simple extension of the classical game "Wolf und Schafe" (Fuchs und Gänse). The game is about a bitter war of sheep versus wolves.
+# The wonderful JEM Game
+This is a simple extension of the classical game `Wolf und Schafe (Fuchs und Gänse)`. The game is about a bitter war of sheep versus wolves.
 ## Normal Game Mode
-The sheep are only safe if they fill the stable up to 8 sheep, while the goal of the wolves is eating 12 of 20 sheep first.
+The sheep are only safe if they `fill the stable` up to 8 sheep, while the goal of the two wolves is eating 12 of 20 sheep first.
 The player of the sheep has the first turn. Sheep are not allowed to move backwards and they can jumpy only one field at each turn. Contrary, the wolves are allowed to move in every direction along the grid lines. If there is a sheep in front of a wolf and the tile behind the sheep is empty, the wolf can start his `attack move`. While jumping over it, the wolf is able to kill the sheep.
 ## Quantum Game Mode
+In this game mode the classical game is extended with some elements of `quantum mechanics`. First, the sheep gets three entangled pairs of sheep, denoted with a indice at the right top of the sheep symbols. They are prepared in the first Bell state between the states "eaten" and "in stable". If one of the sheep gets measured, meaning either reaching the stable or get eaten by a wolf, both sheep collaps in the corresponding state. If the last case appears, the sheep player is allowed to choose the position of the second sheep in the stable.
+But the wolf also did his homework in quantum mechanics and has studied the circuit of the `swap gate` very hard. Before the sheep arrived at the wonderful green meadow, the wolves implemented the circuit in the middle of the game field. Once used, the gate needs three moves to be activated again, because the initial states have to be prepared again. Because the sheep skipped most of the quantum mechanics homework, they are not able to use the gate.
+The swap operation changes a state 01 to 10, meaning wolf and sheep can swap position, which ends the turn of the wolf.
