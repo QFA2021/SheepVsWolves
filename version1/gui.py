@@ -1,5 +1,4 @@
 import random
-
 import pyglet as pg
 import game
 from pyglet.window import mouse
@@ -11,6 +10,7 @@ from pyglet import font
 import enum
 import abc
 import subprocess
+import os
 
 
 # TODOS:
@@ -111,12 +111,12 @@ class MenuScreen(Screen):
         # Bottom Button
         if button == mouse.LEFT and x > window.width // 4 and x < 3 * window.width // 4 and y > window.width // 4 and y < window.width // 2:
             to_game_screen(game.GameMode.QUANTUM)
+        #open tutorial
         if button == mouse.LEFT and x > 5*window.width//12 and x < 7*window.width//12 and y > 3*window.width//80 and y < 3*window.width//80+window.height//12:
-            #open tutorial
             path = str(pathlib.Path().resolve())
-            path = path.removesuffix("version1")
-            read_path = f"{path}README.md"
-            subprocess.call(['cmd.exe', '/c', read_path])
+            path = os.path.join(path, "..")
+            path = os.path.join(path, "README.md")
+            os.startfile(path)
 
 # GAME_SCREEN
 class GameScreen(Screen):
