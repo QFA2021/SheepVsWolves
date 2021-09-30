@@ -1,3 +1,5 @@
+import random
+
 import pyglet as pg
 import game
 from pyglet.window import mouse
@@ -11,10 +13,8 @@ import abc
 
 
 # TODOS:
-# - mute sound
 # - how to play
 # - stack dead sheep
-# - scale images statically
 
 
 def get_path_fonts(file: str) -> str:
@@ -112,12 +112,25 @@ class GameScreen(Screen):
         self.restart_pos = (350, 370)
         self.restart_size = 100
 
+        self.tilts = [random.randint(-10, 10) for i in range(13)]
+
+        self.init_sprites()
+
+
+    def init_sprites(self):
         sheep = pieces.default_sheep_image
         sheep.anchor_x = sheep.width // 2
         sheep.anchor_y = sheep.height // 2
         self.sheep_sprite = pg.sprite.Sprite(sheep)
         scale_factor = icon_size_sheep / sheep.width
         self.sheep_sprite.scale = scale_factor
+
+        dead_sheep = pg.image.load(pieces.get_path("icons/dead_sheep.png"))
+        dead_sheep.anchor_x = dead_sheep.width // 2
+        dead_sheep.anchor_y = dead_sheep.height // 2
+        self.dead_sheep_sprite = pg.sprite.Sprite(dead_sheep)
+        scale_factor = icon_size_sheep / dead_sheep.width
+        self.dead_sheep_sprite.scale = scale_factor
 
         wolf = pieces.default_wolf_image
         wolf.anchor_x = wolf.width // 2
@@ -153,22 +166,9 @@ class GameScreen(Screen):
         self.draw_pieces()
         self.draw_info()
         self.draw_turn_indicator()
+        self.draw_sheep_counter()
 
         batch = pg.graphics.Batch()
-        # sheep left counter
-        count_str = str(self.current_game.sheep_left) + str('x')
-        sheep_counter = pg.text.Label(count_str,
-                                      font_name='Times New Roman',
-                                      font_size=36,
-                                      x=4.7 * grid_margin + center_margin, y=0.2 * grid_margin + center_margin)
-        image = pg.image.load(pieces.get_path("icons/sheep.png"))
-        pos = self.ind_to_cord(5.4, 6.0)
-        scale_factor = icon_size_sheep / image.width
-        sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
-        sprite.scale = scale_factor
-        sheep_counter.draw()
-        batch.draw()
-
         # back button
         image = pg.image.load(pieces.get_path("icons/arrow_left.png"))
         scale_factor = self.back_size / image.width
@@ -187,6 +187,25 @@ class GameScreen(Screen):
         batch.draw()
 
         self.draw_winner_overlay()
+
+    def draw_sheep_counter(self):
+        sheep_dead = 20 - self.current_game.sheep_left
+        diag_index = 0
+        till_overflow = 1
+
+        for i in range(sheep_dead):
+            x_start = 620 + diag_index * 30
+            offset = (diag_index + 1 - till_overflow) * 15
+            sprite = self.dead_sheep_sprite
+            sprite.x = x_start - offset
+            sprite.y = 100 + offset
+            sprite.rotation = 90 + self.tilts[i]
+            sprite.draw()
+
+            till_overflow -= 1
+            if till_overflow == 0:
+                diag_index += 1
+                till_overflow = diag_index + 1
 
     def draw_winner_overlay(self):
         winner_sheep = self.current_game.check_win()
@@ -349,21 +368,7 @@ class GameScreen(Screen):
                         label.draw()
         batch.draw()
 
-        #sheep left counter
-        count_str = str(self.current_game.sheep_left)+str('x')
-        sheep_counter = pg.text.Label(count_str,
-                        font_name='Times New Roman',
-                        font_size=36,
-                        x=4.7 * grid_margin + center_margin, y=0.2* grid_margin + center_margin)
-        image = pg.image.load(pieces.get_path("icons/sheep.png"))
-        pos = self.ind_to_cord(5.4, 6.0)
-        image.anchor_x = image.width // 2
-        image.anchor_y = image.height // 2
-        scale_factor = icon_size_sheep / image.width
-        sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
-        sprite.scale = scale_factor
-        sprites.append(sprite)
-        sheep_counter.draw()
+
 
 
     def on_mouse_press(self, x, y, button, modifiers):
