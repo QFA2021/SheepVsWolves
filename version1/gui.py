@@ -11,6 +11,8 @@ import enum
 import abc
 import subprocess
 import os
+import subprocess, os, platform
+
 
 
 # TODOS:
@@ -114,9 +116,15 @@ class MenuScreen(Screen):
         #open tutorial
         if button == mouse.LEFT and x > 5*window.width//12 and x < 7*window.width//12 and y > 3*window.width//80 and y < 3*window.width//80+window.height//12:
             path = str(pathlib.Path().resolve())
-            path = os.path.join(path, "..")
-            path = os.path.join(path, "README.md")
-            os.startfile(path)
+            if path.__contains__("version1"):
+                path = os.path.join(path, "..")
+            filepath = os.path.join(path, "README.md")
+            if platform.system() == 'Darwin':  # macOS
+                subprocess.call(('open', filepath))
+            elif platform.system() == 'Windows':  # Windows
+                os.startfile(filepath)
+            else:  # linux variants
+                subprocess.call(('xdg-open', filepath))
 
 # GAME_SCREEN
 class GameScreen(Screen):
