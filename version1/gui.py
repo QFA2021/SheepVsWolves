@@ -31,7 +31,7 @@ q_font = font.load('Quantum', 25)
 window_width = 800
 grid_margin = 100
 field_radius = 30
-field_color = (200, 0, 25)
+field_color = (255, 0, 30)
 selected_color = (24, 0, 255)
 teleportation_active_color = (201, 13, 155)
 teleportation_inactive_color = (30, 0, 30)
@@ -40,7 +40,7 @@ red = (25, 25, 50)
 grid_margin = 100
 window_width = 800
 center_margin = window_width / 2 - 3 * grid_margin
-
+stable_color = (255, 65, 0)
 icon_size_sheep = 80
 icon_size_wolf = 62
 
@@ -312,7 +312,9 @@ class GameScreen(Screen):
                 color = field_color
                 if self.current_game.selected_x == column and self.current_game.selected_y == 6 - row:
                     color = selected_color
-
+                #mark stable
+                if game.is_in_stable(6-column, 6-row):
+                    color = stable_color
                 circle = pg.shapes.Circle(x, y, field_radius, color=color, batch=batch)
                 circles.append(circle)
 
@@ -334,8 +336,8 @@ class GameScreen(Screen):
                         offset = 0
                         sprite = self.sheep_sprite
 
-                    sprite.x = pos[0] - offset
-                    sprite.y = pos[1]
+                    sprite.x = pos[0]
+                    sprite.y = pos[1]-offset
                     sprite.draw()
 
                 # marking entanglement
