@@ -12,6 +12,7 @@ import pieces
 
 Music = pg.media.Player()
 Music.queue(pg.resource.media('music/noise.wav'))
+Music.loop = True
 
 
 class GameMode(enum.Enum):
