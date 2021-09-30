@@ -345,13 +345,13 @@ class GameScreen(Screen):
                                               color=color, batch=batch)
                     circles.append(circle)
 
-                # mark selection
                 color = field_color
-                if self.current_game.selected_x == column and self.current_game.selected_y == 6 - row:
-                    color = selected_color
                 #mark stable
                 if game.is_in_stable(6-column, 6-row):
                     color = stable_color
+                #mark selected
+                if self.current_game.selected_x == column and self.current_game.selected_y == 6 - row:
+                    color = selected_color
                 circle = pg.shapes.Circle(x, y, field_radius, color=color, batch=batch)
                 circles.append(circle)
 
