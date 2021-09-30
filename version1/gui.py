@@ -42,7 +42,7 @@ window_width = 800
 center_margin = window_width / 2 - 3 * grid_margin
 
 icon_size_sheep = 80
-icon_size_wolf = 70
+icon_size_wolf = 62
 
 window = pg.window.Window(window_width, window_width, visible=True)
 
@@ -111,6 +111,20 @@ class GameScreen(Screen):
         self.restart_active = False
         self.restart_pos = (350, 370)
         self.restart_size = 100
+
+        sheep = pieces.default_sheep_image
+        sheep.anchor_x = sheep.width // 2
+        sheep.anchor_y = sheep.height // 2
+        self.sheep_sprite = pg.sprite.Sprite(sheep)
+        scale_factor = icon_size_sheep / sheep.width
+        self.sheep_sprite.scale = scale_factor
+
+        wolf = pieces.default_wolf_image
+        wolf.anchor_x = wolf.width // 2
+        wolf.anchor_y = wolf.height // 2
+        self.wolf_sprite = pg.sprite.Sprite(wolf)
+        scale_factor = icon_size_wolf / wolf.width
+        self.wolf_sprite.scale = scale_factor
 
     def on_draw(self):
         window.clear()
@@ -216,7 +230,7 @@ class GameScreen(Screen):
         if info == "": return
 
         x = 130
-        y = window_width - 50
+        y = window_width - 43
         width = 420
 
         # Info for entanglement
@@ -314,18 +328,16 @@ class GameScreen(Screen):
                 pos = self.ind_to_cord(row, column)
                 entry = gb[row][column]
                 if entry is not None:
-                    image = entry.get_image()
-                    image.anchor_x = image.width // 2
-                    image.anchor_y = image.height // 2
-                    icon_size = 62
                     offset = 3
+                    sprite = self.wolf_sprite
                     if type(entry) == pieces.Sheep:
-                        icon_size = 80
                         offset = 0
-                    scale_factor = icon_size / image.width
-                    sprite = pg.sprite.Sprite(image, pos[0], pos[1] - offset, batch=batch)
-                    sprite.scale = scale_factor
-                    sprites.append(sprite)
+                        sprite = self.sheep_sprite
+
+                    sprite.x = pos[0] - offset
+                    sprite.y = pos[1]
+                    sprite.draw()
+
                 # marking entanglement
                 if type(entry) is pieces.Sheep:
                     if entry.entanglement_id != -1:
@@ -347,24 +359,12 @@ class GameScreen(Screen):
         pos = self.ind_to_cord(5.4, 6.0)
         image.anchor_x = image.width // 2
         image.anchor_y = image.height // 2
-        scale_factor = icon_size / image.width
+        scale_factor = icon_size_sheep / image.width
         sprite = pg.sprite.Sprite(image, pos[0], pos[1], batch=batch)
         sprite.scale = scale_factor
         sprites.append(sprite)
         sheep_counter.draw()
-        #winner
-        winner_sheep=self.current_game.check_win()
-        winstring = 'huhu lulu'
-        if winner_sheep == 2:
-            winstring = 'Wolve won!'
-        if winner_sheep == 1:
-            winstring = "Sheep won!"
-        winner = pg.text.Label(winstring,
-                        font_name='Quantum',
-                        font_size=100,
-                        x=25, y=4*window_width/5, color=(255,200,0,255))
-        if not winner_sheep == 0:
-            winner.draw()
+
 
     def on_mouse_press(self, x, y, button, modifiers):
         if button == mouse.LEFT:
