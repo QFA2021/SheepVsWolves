@@ -10,6 +10,7 @@ import pieces
 from pyglet import font
 import enum
 import abc
+import subprocess
 
 
 # TODOS:
@@ -90,6 +91,18 @@ class MenuScreen(Screen):
                                      y=window.height // 4 + 15 * window.height // 100 - window.width // 12,
                                      anchor_x='center', anchor_y='top')
         q_start_text.draw()
+        # start tutorial
+        t_rectangle = pg.shapes.BorderedRectangle(window.width // 2, 3 * window.height // 80,
+                                                        window.width // 6, window.height // 12,
+                                                        border=20, color=red, border_color=blue)
+        t_rectangle.anchor_position = (window.width//12, 0)
+        t_rectangle.opacity = 160
+        t_rectangle.draw()
+        t_text = pg.text.Label("Tutorial", font_name='Quantum', font_size=12,
+                                     x=window.width // 2,
+                                     y=37 * window.height // 400,
+                                     anchor_x='center', anchor_y='top')
+        t_text.draw()
 
     def on_mouse_press(self, x, y, button, modifiers):
         # Top Button
@@ -98,7 +111,12 @@ class MenuScreen(Screen):
         # Bottom Button
         if button == mouse.LEFT and x > window.width // 4 and x < 3 * window.width // 4 and y > window.width // 4 and y < window.width // 2:
             to_game_screen(game.GameMode.QUANTUM)
-
+        if button == mouse.LEFT and x > 5*window.width//12 and x < 7*window.width//12 and y > 3*window.width//80 and y < 3*window.width//80+window.height//12:
+            #open tutorial
+            path = str(pathlib.Path().resolve())
+            path = path.removesuffix("version1")
+            read_path = f"{path}README.md"
+            subprocess.call(['cmd.exe', '/c', read_path])
 
 # GAME_SCREEN
 class GameScreen(Screen):
